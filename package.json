@@ -12,5 +12,12 @@
     "benchmark": "npm run benchmark --workspace=zenitch-mcp"
   },
   "author": "Ajay M",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ajay-4772/zenitch-MCP.git"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
 }

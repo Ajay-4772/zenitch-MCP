@@ -1,5 +1,10 @@
 # Zenitch
 
+[![CI](https://github.com/Ajay-4772/zenitch-MCP/actions/workflows/ci.yml/badge.svg)](https://github.com/Ajay-4772/zenitch-MCP/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
+[![MCP Protocol](https://img.shields.io/badge/MCP-1.32.1-orange.svg)](https://modelcontextprotocol.io)
+
 AI-powered UI/UX design intelligence and verified engineering system delivered as a Model Context Protocol (MCP) server.
 
 Zenitch guides AI agents to construct accessible, responsive, aesthetically intentional frontend applications while enforcing strict quality boundaries, design policies, and persistent project memory.
@@ -75,7 +80,7 @@ Zenitch uses a tiered progressive disclosure architecture to avoid context windo
 | `zenitch_resolve_component` | Recommends existing component reuse or scaffolds accessible new components (React, Vue, Svelte). |
 | `zenitch_audit_page_quality` | Analyzes HTML structure, landmarks, viewport tags, and responsiveness. |
 | `zenitch_compare_visual_regression` | Compares visual artifacts and flags structural/layout drift. |
-| `zenitch_evaluate_animation_budget` | Verifies 60fps frame budgets and classifies GPU-safe vs. layout-reflowing properties. |
+| `zenitch_evaluate_animation_budget` | Evaluates CSS transitions/animations for compositor-friendly properties (transform, opacity) and flags layout-reflowing properties. |
 | `zenitch_plan_product_experience` | Generates end-to-end design manifests, layout topology, and token bindings from prompts. |
 
 ---

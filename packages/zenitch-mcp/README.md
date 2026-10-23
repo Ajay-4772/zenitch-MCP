@@ -1,18 +1,23 @@
 # Zenitch MCP Server (`zenitch-mcp`)
 
+[![CI](https://github.com/Ajay-4772/zenitch-MCP/actions/workflows/ci.yml/badge.svg)](https://github.com/Ajay-4772/zenitch-MCP/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
+
+
 > **AI-Powered UI/UX Design Intelligence and Verified Engineering Model Context Protocol Server**  
-> Enforcing product-driven ergonomics, project-aware preservation, anti-cliche design policies, design system token intelligence, component reuse discovery, deterministic quality auditing, visual regression diffing, 60FPS hardware budgets, and stateful verified engineering across AI coding workflows.
+> Product-driven ergonomics, project-aware preservation, anti-cliché design policies, design system token intelligence, component reuse discovery, static quality auditing, visual regression diffing, GPU-safe animation analysis, and stateful verified engineering across AI coding workflows.
 
 ---
 
 ## 1. Overview
 
-**Zenitch MCP** is an enterprise-grade Model Context Protocol (MCP) server designed to eliminate low-quality, generic AI code generation. It equips AI coding assistants with deep design system intelligence, architecture dependency graphs, change impact analysis, and persistent project memory.
+**Zenitch MCP** is a Model Context Protocol (MCP) server designed to guide AI coding assistants toward accessible, responsive, and project-consistent frontend code. It equips AI coding assistants with structured design system intelligence, architecture dependency graphs, change impact analysis, and persistent project memory.
 
 ### Key Capabilities:
 * **Product Experience Intelligence (PXI):** Proactively plans adaptive application architecture, layout hierarchies, candidate views, and ergonomic requirements before code generation.
-* **Design Policy & Anti-Cliche Governance:** Enforces strict WCAG 2.2 AA/AAA accessibility, responsive touch targets, contrast math, and prevents cliche dark/neon or excessive glassmorphism anti-patterns.
-* **Hardware Animation Budgets:** Analyzes CSS transitions and keyframes, enforcing GPU compositor properties, clamped device pixel ratios (DPR), and `prefers-reduced-motion` fallbacks.
+* **Design Policy & Anti-Cliché Governance:** Audits markup and CSS for static WCAG 2.2 contrast math, touch target sizing, and flags visual anti-patterns such as unjustified dark themes or excessive glassmorphism in utilitarian domains.
+* **Hardware Animation Budgets:** Analyzes CSS transitions and keyframes for compositor-friendly properties (transform, opacity), flagging layout-reflowing properties and verifying `prefers-reduced-motion` media queries.
 * **Persistent Project Memory (`.zenitch/`):** Provides an advisory-locked, corruption-resistant ledger for requirements, human approvals, architectural decisions, and progressive verification.
 
 ---
@@ -99,7 +104,7 @@ Zenitch MCP organizes its capabilities into progressive tiers, unified under can
 | **Component** | `zenitch_resolve_component` | Component | Recommends reusing existing codebase components before creating new ones. |
 | **Audit** | `zenitch_audit_page_quality` | Quality Assurance | Audits pages for overflow, contrast, touch targets, and form accessibility. |
 | **Visual** | `zenitch_compare_visual_regression` | Quality Assurance | Compares before/after screenshot diffs to detect unexpected layout shifts. |
-| **Animation** | `zenitch_evaluate_animation_budget` | Performance | Enforces composite-only properties, clamped DPR, and reduced motion. |
+| **Animation** | `zenitch_evaluate_animation_budget` | Performance | Analyzes CSS transitions for compositor-friendly properties and checks reduced-motion declarations. |
 | **Memory** | `zenitch_get_project_context` | Engineering Memory | Retrieves persistent project requirements, constraints, and preferences. |
 | **Memory** | `zenitch_record_decision` | Engineering Memory | Records accepted/rejected decisions and generates negative constraints. |
 | **Memory** | `zenitch_manage_requirement` | Engineering Memory | Tracks requirement lifecycles, acceptance criteria, and human approvals. |
@@ -124,6 +129,12 @@ Zenitch MCP organizes its capabilities into progressive tiers, unified under can
 4. **Clean-Room Boundary:** Zenitch does not bundle decompilers or binary reverse-engineering tools. It ingests verified behavioral requirements and design specifications while safeguarding proprietary IP.
 
 ---
+
+### Verification Boundaries & Limitations
+
+* **Static vs. Dynamic:** Zenitch performs static source analysis, CSS AST parsing, and markup inspection. It does **not** execute browser JavaScript, calculate dynamic subpixel rendering reflows, or profile real hardware GPU frame times.
+* **Accessibility Limitations:** Tools evaluate structural presence (semantic HTML5 landmark roles, color contrast math, touch target dimensions, aria-label attributes). Static checks do **not** certify full WCAG compliance or physical keyboard focus trap behavior.
+* **Advisory Role:** Zenitch provides evidence-based analysis and advisory guardrails. Engineers remain responsible for testing and validating AI-generated code.
 
 ## 6. Programmatic Library Usage
 
