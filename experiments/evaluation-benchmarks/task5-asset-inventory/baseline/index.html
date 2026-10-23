@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AssetVault Catalog</title>
+  <style>
+    body { background: #121826; color: #fff; font-family: sans-serif; padding: 2rem; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .filters { display: flex; gap: 1rem; margin-bottom: 2rem; }
+    input, select { padding: 0.5rem; background: #1f2937; color: #fff; border: 1px solid #374151; }
+    button { padding: 0.5rem 1rem; background: #3b82f6; color: white; border: none; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #374151; padding: 0.75rem; text-align: left; }
+    th { background: #1f2937; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AssetVault Media Catalog</h1>
+    <span>Total Assets: 1,842</span>
+  </header>
+
+  <div class="filters">
+    <!-- Notice: Unlabeled input, unhandled filter button -->
+    <input type="text" placeholder="Search assets...">
+    <select>
+      <option>All Formats</option>
+      <option>PNG / SVG</option>
+      <option>MP4 Video</option>
+    </select>
+    <button>Filter</button>
+  </div>
+
+  <!-- Notice: Missing loading state container and missing empty state container -->
+  <table>
+    <thead>
+      <tr>
+        <th>Asset Name</th>
+        <th>Dimensions</th>
+        <th>File Format</th>
+        <th>Uploaded</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>hero_banner_4k.webp</td>
+        <td>3840 x 2160</td>
+        <td>WEBP</td>
+        <td>2026-10-12</td>
+        <td><button>Download</button></td>
+      </tr>
+      <tr>
+        <td>brand_mark_vector.svg</td>
+        <td>Vector Scalable</td>
+        <td>SVG</td>
+        <td>2026-10-14</td>
+        <td><button>Download</button></td>
+      </tr>
+      <tr>
+        <td>launch_promo_cut.mp4</td>
+        <td>1920 x 1080</td>
+        <td>MP4</td>
+        <td>2026-10-15</td>
+        <td><button>Download</button></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

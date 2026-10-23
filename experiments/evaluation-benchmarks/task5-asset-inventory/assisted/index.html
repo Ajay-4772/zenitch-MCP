@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AssetVault — High-Performance Digital Asset Catalog</title>
+  <style>
+    :root {
+      --color-primary: #38bdf8; /* Light Sky Blue */
+      --color-primary-hover: #0284c7;
+      --color-background: #0b0f19; /* Obsidian Slate */
+      --color-surface: #111827; /* Dark Modern Card */
+      --color-text-primary: #f8fafc;
+      --color-text-muted: #94a3b8;
+      --color-border: #1e293b;
+      --color-danger: #ef4444;
+      --color-danger-bg: rgba(239, 68, 68, 0.1);
+      --radius-sm: 4px;
+      --font-body: "Inter", system-ui, -apple-system, sans-serif;
+      --font-mono: "JetBrains Mono", Menlo, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--color-background); color: var(--color-text-primary); padding: 2rem; line-height: 1.5; }
+    header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--color-border); padding-bottom: 1.5rem; }
+    h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
+    .asset-counter { font-family: var(--font-mono); font-size: 0.85rem; background: var(--color-surface); padding: 6px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-primary); }
+    .filter-bar { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 2rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 200px; }
+    label { font-size: 0.8rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; font-family: var(--font-mono); }
+    input[type="text"], select { min-height: 44px; padding: 8px 12px; background: #0f172a; color: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: inherit; }
+    input:focus-visible, select:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+    .btn { min-width: 44px; min-height: 44px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-family: inherit; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; border: 1px solid transparent; }
+    .btn-primary { background: var(--color-primary); color: #0b0f19; font-weight: 700; }
+    .btn-primary:hover { background: var(--color-primary-hover); color: #fff; }
+    .btn-primary:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+    .btn-secondary { background: #1e293b; color: #f8fafc; border: 1px solid var(--color-border); }
+    .btn-secondary:hover { background: #334155; }
+    .table-wrapper { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow-x: auto; margin-bottom: 2rem; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+    caption { padding: 0.75rem 1rem; text-align: left; font-weight: 700; color: var(--color-text-muted); background: #0f172a; border-bottom: 1px solid var(--color-border); font-size: 0.85rem; font-family: var(--font-mono); text-transform: uppercase; }
+    th { background: #0f172a; padding: 12px 16px; font-weight: 600; font-family: var(--font-mono); font-size: 0.8rem; text-transform: uppercase; border-bottom: 2px solid var(--color-border); color: var(--color-text-muted); }
+    td { padding: 14px 16px; border-bottom: 1px solid var(--color-border); }
+    tr:hover { background: rgba(255,255,255,0.02); }
+    .badge { font-family: var(--font-mono); font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; border: 1px solid transparent; }
+    .badge-webp { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
+    .badge-svg { background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: rgba(168, 85, 247, 0.3); }
+    .badge-mp4 { background: rgba(34, 197, 94, 0.15); color: #4ade80; border-color: rgba(34, 197, 94, 0.3); }
+    .error-banner { background: var(--color-danger-bg); border: 1px solid var(--color-danger); border-radius: var(--radius-sm); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; color: #fca5a5; font-size: 0.9rem; }
+    .empty-state { padding: 3rem 1.5rem; text-align: center; color: var(--color-text-muted); background: var(--color-surface); border: 1px dashed var(--color-border); border-radius: var(--radius-sm); margin-bottom: 2rem; display: none; }
+    .loading-feedback { padding: 2rem; text-align: center; color: var(--color-primary); font-family: var(--font-mono); font-size: 0.85rem; display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AssetVault Media Catalog</h1>
+    <div class="asset-counter" aria-label="Inventory Count">Live Assets: 1,842 Recorded</div>
+  </header>
+
+  <div role="alert" class="error-banner">
+    <div><strong>Sync Advisory:</strong> Asset CDN cluster 'eu-west-cdn' experienced degraded thumbnail generation latency.</div>
+    <button type="button" class="btn btn-secondary" onclick="alert('Retrying CDN sync handshake...')">Retry Sync</button>
+  </div>
+
+  <section class="filter-bar" aria-label="Media Asset Filtering Controls">
+    <div class="form-group">
+      <label for="asset-search-input">Search Filename or Tag</label>
+      <input type="text" id="asset-search-input" placeholder="e.g. hero_banner_4k" />
+    </div>
+    <div class="form-group">
+      <label for="format-select">Format Filter</label>
+      <select id="format-select">
+        <option value="all">All Available Formats</option>
+        <option value="webp">WEBP High Efficiency</option>
+        <option value="svg">SVG Vector Graphics</option>
+        <option value="mp4">MP4 Video Containers</option>
+      </select>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="alert('Applying catalog filters...')">Apply Filters</button>
+  </section>
+
+  <div id="loading-spinner" class="loading-feedback" aria-busy="true">
+    <span>Synchronizing asset catalog indices from storage cluster...</span>
+  </div>
+
+  <div class="table-wrapper" role="region" aria-label="Media Assets Catalog" tabindex="0">
+    <table>
+      <caption>Verified Production Media Assets</caption>
+      <thead>
+        <tr>
+          <th scope="col">Asset Name</th>
+          <th scope="col">Dimensions</th>
+          <th scope="col">File Format</th>
+          <th scope="col">Uploaded Timestamp</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>hero_banner_4k.webp</strong></td>
+          <td>3840 x 2160 px</td>
+          <td><span class="badge badge-webp">WEBP (2.1 MB)</span></td>
+          <td>2026-10-12 14:22 UTC</td>
+          <td><button type="button" class="btn btn-secondary" aria-label="Download hero_banner_4k.webp" onclick="alert('Downloading hero_banner_4k.webp')">Download</button></td>
+        </tr>
+        <tr>
+          <td><strong>brand_mark_vector.svg</strong></td>
+          <td>Scalable Vector</td>
+          <td><span class="badge badge-svg">SVG (44 KB)</span></td>
+          <td>2026-10-14 09:15 UTC</td>
+          <td><button type="button" class="btn btn-secondary" aria-label="Download brand_mark_vector.svg" onclick="alert('Downloading brand_mark_vector.svg')">Download</button></td>
+        </tr>
+        <tr>
+          <td><strong>launch_promo_cut.mp4</strong></td>
+          <td>1920 x 1080 px</td>
+          <td><span class="badge badge-mp4">MP4 (48.6 MB)</span></td>
+          <td>2026-10-15 01:40 UTC</td>
+          <td><button type="button" class="btn btn-secondary" aria-label="Download launch_promo_cut.mp4" onclick="alert('Downloading launch_promo_cut.mp4')">Download</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="empty-state-card" class="empty-state" role="status">
+    <h3>No matching assets found</h3>
+    <p>Adjust your search query or reset the format filter to inspect all 1,842 assets.</p>
+  </div>
+</body>
+</html>

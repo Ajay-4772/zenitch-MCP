@@ -1,0 +1,192 @@
+{
+  "baselineResult": {
+    "evaluator": "Zenitch Task 9 PXI Effectiveness Evaluator",
+    "evaluatorVersion": "3.1.0-pxi-fairness-amended",
+    "metadata": "C0_Baseline",
+    "summary": {
+      "totalCriteria": 8,
+      "passedCount": 8,
+      "failedCount": 0,
+      "notAssessedCount": 0,
+      "coveragePercentage": 100
+    },
+    "interactionEvidence": {
+      "hasScriptTag": true,
+      "totalScriptChars": 49950,
+      "hasInteractiveHandlers": true,
+      "classification": "ACTIVE_EVENT_HANDLERS_DETECTED",
+      "note": "Static presence of handlers does not certify browser execution correctness."
+    },
+    "evidenceBoundaries": {
+      "runtimeInteractionExecution": {
+        "status": "NOT_ASSESSED",
+        "reason": "Static HTML inspection cannot certify runtime event listener execution; requires browser-driven test harness."
+      },
+      "actualKeyboardNavigation": {
+        "status": "NOT_ASSESSED",
+        "reason": "Static HTML inspection cannot verify physical focus traps, Tab ring traversal, or keydown event loops; requires interactive browser session."
+      },
+      "computedBrowserRendering": {
+        "status": "NOT_ASSESSED",
+        "reason": "Static HTML inspection cannot verify computed layout, absence of horizontal clipping, or subpixel rendering across devices; requires browser rendering."
+      },
+      "visualQualityRating": {
+        "status": "NOT_ASSESSED",
+        "reason": "Static HTML inspection cannot assess aesthetic elegance, typographic hierarchy, or subjective visual polish; requires human or multimodal visual audit."
+      }
+    },
+    "criteriaResults": [
+      {
+        "id": "REQ-T9-01-HEADER",
+        "title": "Clinical Header & Session Identity",
+        "category": "Landmark",
+        "status": "PASS",
+        "reason": "Header landmark contains clinical identity and clinician session/status indicator."
+      },
+      {
+        "id": "REQ-T9-02-VITALS-GRID",
+        "title": "Multi-Metric Triage Telemetry Grid",
+        "category": "Product",
+        "status": "PASS",
+        "reason": "All 4 core vitals present (Heart Rate, Blood Pressure, SpO2, Temperature)."
+      },
+      {
+        "id": "REQ-T9-03-QUEUE-TABLE",
+        "title": "Patient Queue Tabular Structure",
+        "category": "Product",
+        "status": "PASS",
+        "reason": "Semantic <table> with accessible headers and acuity status badges."
+      },
+      {
+        "id": "REQ-T9-04-TRIAGE-FILTER",
+        "title": "Acuity Filtering Toolbar",
+        "category": "Interaction",
+        "status": "PASS",
+        "reason": "Acuity filter toolbar controls with accessible state markup present (static verification only; runtime interaction not certified)."
+      },
+      {
+        "id": "REQ-T9-05-ALERT-STREAM",
+        "title": "Clinical Alert & Anomaly Stream",
+        "category": "Product",
+        "status": "PASS",
+        "reason": "Accessible alert/stream region with live-announcement semantics."
+      },
+      {
+        "id": "REQ-T9-06-A11Y-LANDMARKS",
+        "title": "Semantic Landmark Architecture",
+        "category": "Compliance",
+        "status": "PASS",
+        "reason": "Semantic landmarks (<header>, <main>, and <nav>/<aside>/<footer>) correctly structured."
+      },
+      {
+        "id": "REQ-T9-07-THEME-ERGONOMICS",
+        "title": "Clinical High-Contrast Theme (Daylight Readability)",
+        "category": "Compliance",
+        "status": "PASS",
+        "reason": "High-contrast clinical theme verified: measurable contrast ratio 16.30:1 meets daylight readability threshold (>= 4.5:1; target 7:1 AAA). (Background: #f1f5f9, Text: #0f172a)."
+      },
+      {
+        "id": "REQ-T9-08-RESPONSIVE-LAYOUT",
+        "title": "Mobile-Adaptive Grid",
+        "category": "Responsive",
+        "status": "PASS",
+        "reason": "Responsive CSS rules verified via viewport meta and CSS media queries / responsive grid declarations (static declaration check; computed rendering not assessed)."
+      }
+    ]
+  },
+  "assistedResult": {
+    "evaluator": "Zenitch Task 9 PXI Effectiveness Evaluator",
+    "evaluatorVersion": "3.1.0-pxi-fairness-amended",
+    "metadata": "C1_Assisted",
+    "summary": {
+      "totalCriteria": 8,
+      "passedCount": 7,
+      "failedCount": 1,
+      "notAssessedCount": 0,
+      "coveragePercentage": 88
+    },
+    "interactionEvidence": {
+      "hasScriptTag": true,
+      "totalScriptChars": 23202,
+      "hasInteractiveHandlers": true,
+      "classification": "ACTIVE_EVENT_HANDLERS_DETECTED",
+      "note": "Static presence of handlers does not certify browser execution correctness."
+    },
+    "evidenceBoundaries": {
+      "runtimeInteractionExecution": {
+        "status": "NOT_ASSESSED",
+        "reason": "Static HTML inspection cannot certify runtime event listener execution; requires browser-driven test harness."
+      },
+      "actualKeyboardNavigation": {
+        "status": "NOT_ASSESSED",
+        "reason": "Static HTML inspection cannot verify physical focus traps, Tab ring traversal, or keydown event loops; requires interactive browser session."
+      },
+      "computedBrowserRendering": {
+        "status": "NOT_ASSESSED",
+        "reason": "Static HTML inspection cannot verify computed layout, absence of horizontal clipping, or subpixel rendering across devices; requires browser rendering."
+      },
+      "visualQualityRating": {
+        "status": "NOT_ASSESSED",
+        "reason": "Static HTML inspection cannot assess aesthetic elegance, typographic hierarchy, or subjective visual polish; requires human or multimodal visual audit."
+      }
+    },
+    "criteriaResults": [
+      {
+        "id": "REQ-T9-01-HEADER",
+        "title": "Clinical Header & Session Identity",
+        "category": "Landmark",
+        "status": "PASS",
+        "reason": "Header landmark contains clinical identity and clinician session/status indicator."
+      },
+      {
+        "id": "REQ-T9-02-VITALS-GRID",
+        "title": "Multi-Metric Triage Telemetry Grid",
+        "category": "Product",
+        "status": "PASS",
+        "reason": "All 4 core vitals present (Heart Rate, Blood Pressure, SpO2, Temperature)."
+      },
+      {
+        "id": "REQ-T9-03-QUEUE-TABLE",
+        "title": "Patient Queue Tabular Structure",
+        "category": "Product",
+        "status": "PASS",
+        "reason": "Semantic <table> with accessible headers and acuity status badges."
+      },
+      {
+        "id": "REQ-T9-04-TRIAGE-FILTER",
+        "title": "Acuity Filtering Toolbar",
+        "category": "Interaction",
+        "status": "PASS",
+        "reason": "Acuity filter toolbar controls with accessible state markup present (static verification only; runtime interaction not certified)."
+      },
+      {
+        "id": "REQ-T9-05-ALERT-STREAM",
+        "title": "Clinical Alert & Anomaly Stream",
+        "category": "Product",
+        "status": "PASS",
+        "reason": "Accessible alert/stream region with live-announcement semantics."
+      },
+      {
+        "id": "REQ-T9-06-A11Y-LANDMARKS",
+        "title": "Semantic Landmark Architecture",
+        "category": "Compliance",
+        "status": "PASS",
+        "reason": "Semantic landmarks (<header>, <main>, and <nav>/<aside>/<footer>) correctly structured."
+      },
+      {
+        "id": "REQ-T9-07-THEME-ERGONOMICS",
+        "title": "Clinical High-Contrast Theme (Daylight Readability)",
+        "category": "Compliance",
+        "status": "FAIL",
+        "reason": "Insufficient contrast for daylight reading: measured contrast ratio 1.00:1 fails minimum threshold of 4.5:1. (Background: #0f172a, Text: #0f172a)."
+      },
+      {
+        "id": "REQ-T9-08-RESPONSIVE-LAYOUT",
+        "title": "Mobile-Adaptive Grid",
+        "category": "Responsive",
+        "status": "PASS",
+        "reason": "Responsive CSS rules verified via viewport meta and CSS media queries / responsive grid declarations (static declaration check; computed rendering not assessed)."
+      }
+    ]
+  }
+}

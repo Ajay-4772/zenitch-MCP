@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build Outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.env
+*.pem
+*.key
+
+# Runtime & Temporary State
+.zenitch/
+*.tmp
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.system_generated/
+scratch/
+
+# Unverified / Large Binary Design Assets (Quarantined from VC and packaging)
+*.fig
+UI Kit gen.fig
+
+# OS & Editor Metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Local Archive of Historical Transcripts & Demos (Preserved locally, excluded from git)
+archive/

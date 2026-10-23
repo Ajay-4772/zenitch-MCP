@@ -1,0 +1,16 @@
+{
+  "name": "zenitch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zenitch - AI-Powered UI/UX Design Intelligence and Verified Engineering Workspace",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=zenitch-mcp",
+    "test": "npm test --workspace=zenitch-mcp",
+    "benchmark": "npm run benchmark --workspace=zenitch-mcp"
+  },
+  "author": "Ajay M",
+  "license": "MIT"
+}

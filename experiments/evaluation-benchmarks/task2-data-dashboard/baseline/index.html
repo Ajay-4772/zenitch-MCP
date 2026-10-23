@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BioTriage Dashboard</title>
+  <style>
+    body { background: #0b0f19; color: #f8fafc; font-family: sans-serif; padding: 2rem; }
+    .metrics { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .metric { background: #1e293b; padding: 1rem; border-radius: 8px; flex: 1; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #334155; padding: 0.75rem; text-align: left; }
+    th { background: #1e293b; }
+    .btn { background: #3b82f6; color: white; border: none; padding: 0.5rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>BioTriage Analytics</h1>
+  <div class="metrics">
+    <div class="metric"><h3>Total Samples</h3><p>1,248</p></div>
+    <div class="metric"><h3>Critical Flags</h3><p>14</p></div>
+    <div class="metric"><h3>Pending Review</h3><p>42</p></div>
+  </div>
+  <div class="filters">
+    <input type="text" placeholder="Search sample ID...">
+    <button class="btn">Filter</button>
+  </div>
+  <table>
+    <tr><th>Sample ID</th><th>Patient Code</th><th>Biomarker</th><th>Status</th><th>Action</th></tr>
+    <tr><td>SMP-8091</td><td>PT-901</td><td>Troponin I (Elevated)</td><td>Critical</td><td><button class="btn">View</button></td></tr>
+    <tr><td>SMP-8092</td><td>PT-442</td><td>D-Dimer (Normal)</td><td>Normal</td><td><button class="btn">View</button></td></tr>
+  </table>
+</body>
+</html>

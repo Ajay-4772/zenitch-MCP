@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAFTWERK Studio - Modern Architecture</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f3f4f6; color: #1f2937; margin: 0; }
+    header { background: #ffffff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    nav a { margin: 0 1rem; color: #4b5563; text-decoration: none; }
+    .hero { text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); color: white; border-radius: 12px; margin: 2rem; }
+    .btn { background: #4f46e5; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; }
+    .btn-tiny { width: 20px; height: 20px; padding: 0; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem; }
+    .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>KRAFTWERK</h2>
+    <nav>
+      <a href="#">Projects</a>
+      <a href="#">Philosophy</a>
+      <a href="#">Contact</a>
+    </nav>
+    <button class="btn btn-tiny"><svg viewBox="0 0 20 20"><path d="M3 3h14v2H3z"/></svg></button>
+  </header>
+  <div class="hero">
+    <h1>Architectural Precision</h1>
+    <p>Designing modern, sustainable structures for tomorrow.</p>
+    <button class="btn">Explore Projects</button>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Urban Monolith</h3>
+      <p>Commercial high-rise in Berlin.</p>
+    </div>
+    <div class="card">
+      <h3>Brutalist Pavilion</h3>
+      <p>Cultural exhibition center in Zurich.</p>
+    </div>
+    <div class="card">
+      <h3>Raw Concrete Loft</h3>
+      <p>Residential living space in Vienna.</p>
+    </div>
+  </div>
+</body>
+</html>

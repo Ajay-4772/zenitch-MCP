@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAFTWERK Studio — Brutalist Structural Architecture</title>
+  <style>
+    :root {
+      --color-primary: #000000;
+      --color-secondary: #facc15;
+      --color-background: #ffffff;
+      --color-surface: #ffffff;
+      --color-text-primary: #000000;
+      --color-border: #000000;
+      --color-accent: #ff3366;
+      --radius-base: 0px;
+      --shadow-elevation: 4px 4px 0px #000000;
+      --font-heading: "Space Grotesk", system-ui, sans-serif;
+      --font-mono: "Space Mono", monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-heading); background: #fef08a; color: var(--color-text-primary); line-height: 1.5; }
+    header { background: var(--color-surface); border-bottom: 3px solid var(--color-border); padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-size: 1.75rem; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; }
+    nav { display: flex; gap: 1.5rem; align-items: center; }
+    nav a { color: var(--color-text-primary); text-decoration: none; font-weight: 700; border-bottom: 2px solid transparent; padding: 0.25rem 0; }
+    nav a:hover, nav a:focus-visible { border-bottom-color: var(--color-border); outline: none; }
+    .btn-primary {
+      min-width: 44px; min-height: 44px; padding: 12px 24px;
+      background: var(--color-secondary); color: var(--color-primary);
+      border: 3px solid var(--color-border); border-radius: 0px;
+      font-weight: 800; font-family: inherit; font-size: 1rem;
+      box-shadow: var(--shadow-elevation); cursor: pointer; text-transform: uppercase;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn-primary:hover { background: #fde047; }
+    .btn-primary:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000000; }
+    .btn-primary:focus-visible { outline: 3px dashed var(--color-accent); outline-offset: 4px; }
+    .mobile-nav-toggle {
+      min-width: 44px; min-height: 44px; display: none;
+      background: var(--color-surface); border: 3px solid var(--color-border);
+      font-weight: 900; cursor: pointer; box-shadow: 2px 2px 0px #000;
+    }
+    main { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; }
+    .hero { background: var(--color-surface); border: 3px solid var(--color-border); box-shadow: 6px 6px 0px #000000; padding: 4rem 3rem; margin-bottom: 3rem; }
+    .hero h1 { font-size: 3.5rem; font-weight: 900; text-transform: uppercase; line-height: 1.05; margin-bottom: 1rem; letter-spacing: -0.04em; }
+    .badge { display: inline-block; background: var(--color-accent); color: #fff; font-family: var(--font-mono); font-size: 0.85rem; padding: 4px 10px; border: 2px solid #000; margin-bottom: 1.5rem; font-weight: 700; text-transform: uppercase; }
+    .hero p { font-size: 1.25rem; max-width: 650px; margin-bottom: 2rem; font-weight: 500; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+    .card { background: var(--color-surface); border: 3px solid var(--color-border); box-shadow: 4px 4px 0px #000000; padding: 2rem; }
+    .card h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.75rem; text-transform: uppercase; }
+    footer { border-top: 3px solid var(--color-border); background: #ffffff; padding: 2rem; text-align: center; font-weight: 700; font-family: var(--font-mono); }
+    @media (max-width: 768px) {
+      .hero { padding: 2rem 1.5rem; }
+      .hero h1 { font-size: 2.25rem; }
+      nav { display: none; }
+      .mobile-nav-toggle { display: flex; align-items: center; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">KRAFTWERK</div>
+    <nav aria-label="Main Navigation">
+      <a href="/projects">Projects</a>
+      <a href="/philosophy">Philosophy</a>
+      <a href="/studio">Studio</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu">
+      <span aria-hidden="true">///</span>
+    </button>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="badge">Monolithic Form & Function</div>
+      <h1 id="hero-title">Raw Geometry. Uncompromised Structures.</h1>
+      <p>We reject decorative veneers. We engineer civic and residential monuments of concrete, steel, and unyielding brutalist precision.</p>
+      <button type="button" class="btn-primary" onclick="location.href='/projects'">Commission Structure</button>
+    </section>
+    <section class="grid" aria-label="Featured Works">
+      <article class="card">
+        <h3>01 / Urban Monolith</h3>
+        <p>18-story reinforced concrete headquarters with exposed post-tensioned shear walls in Berlin.</p>
+      </article>
+      <article class="card">
+        <h3>02 / The Bunkerspace</h3>
+        <p>Subterranean acoustic performance pavilion utilizing cantilevered board-formed concrete slabs.</p>
+      </article>
+      <article class="card">
+        <h3>03 / Tower Minimal</h3>
+        <p>Vertical residential living hub stripped of ornamental clutter, engineered for century-scale resilience.</p>
+      </article>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2026 KRAFTWERK ARCHITEKTUR GMBH — ALL RIGHTS RESERVED</p>
+  </footer>
+</body>
+</html>

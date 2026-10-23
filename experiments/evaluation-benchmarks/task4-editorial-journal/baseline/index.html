@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polychrome Review — Journal of Contemporary Culture</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fafafa; color: #222; margin: 0; line-height: 1.6; }
+    header { background: #fff; border-bottom: 1px solid #e5e5e5; padding: 1.5rem 2rem; text-align: center; }
+    .masthead h1 { font-size: 2rem; margin: 0 0 0.25rem 0; font-weight: 700; }
+    .issue-meta { font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
+    main { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
+    .featured-article { background: #fff; padding: 2rem; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+    .featured-article h2 { font-size: 1.75rem; margin-top: 0; }
+    .byline { color: #555; font-size: 0.9rem; margin-bottom: 1rem; }
+    blockquote { border-left: 3px solid #3b82f6; margin: 1.5rem 0; padding-left: 1rem; color: #444; font-style: italic; }
+    .article-index { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .index-card { background: #fff; padding: 1.25rem; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .index-card h3 { font-size: 1.1rem; margin-top: 0; }
+    .index-card a { color: #2563eb; text-decoration: none; }
+    .newsletter-section { background: #f3f4f6; padding: 2rem; margin-top: 3rem; text-align: center; border-radius: 6px; }
+    .newsletter-section input { padding: 0.5rem; width: 250px; border: 1px solid #ccc; border-radius: 4px; }
+    .newsletter-section button { padding: 0.5rem 1rem; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="masthead">
+      <h1>POLYCHROME REVIEW</h1>
+      <div class="issue-meta">Volume XII · Autumn Issue · Established 2018</div>
+    </div>
+  </header>
+  <main>
+    <article class="featured-article">
+      <h2>The Architecture of Silence: Spatial Contemplation in Modernist Prose</h2>
+      <div class="byline">By Dr. Elena Vance · 14 min read · Literary Theory</div>
+      <p>Modernism did not merely dismantle rhetorical ornamentation; it reorganized the cadence of cognitive pause. When prose ceases to rush toward closure, space itself becomes a syntactical element.</p>
+      <blockquote>
+        "The punctuation of space carries equal weight to the sentence itself; what remains unsaid structures the room."
+        <cite>— Spatial Poetics, Vance (2024)</cite>
+      </blockquote>
+      <p>To examine this requires reconsidering the linear progression of narrative momentum.</p>
+    </article>
+
+    <section class="article-index" aria-label="Curated Essays">
+      <div class="index-card">
+        <span class="category">Aesthetics</span>
+        <h3>Chromatic Dissonance</h3>
+        <p>By Julian K. Bell</p>
+        <a href="#">Read Essay</a>
+      </div>
+      <div class="index-card">
+        <span class="category">Criticism</span>
+        <h3>Against Ephemeral Media</h3>
+        <p>By Sarah Chen</p>
+        <a href="#">Read Essay</a>
+      </div>
+      <div class="index-card">
+        <span class="category">History</span>
+        <h3>The Monastic Scriptoria</h3>
+        <p>By Marcus Thorne</p>
+        <a href="#">Read Essay</a>
+      </div>
+    </section>
+
+    <section class="newsletter-section">
+      <h3>The Weekly Dispatch</h3>
+      <p>Essays, monographs, and critical theory delivered each Thursday morning.</p>
+      <!-- Note: Missing accessible label on email input; href="#" on card links -->
+      <form onsubmit="return false;">
+        <input type="email" placeholder="reader@example.com" />
+        <button type="submit">Subscribe</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

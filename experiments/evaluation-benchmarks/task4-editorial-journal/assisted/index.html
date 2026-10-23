@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POLYCHROME REVIEW — Journal of Contemporary Culture & Critical Aesthetics</title>
+  <style>
+    :root {
+      --color-primary: #881337; /* Rose 900 / Deep Wine */
+      --color-primary-hover: #4c0519;
+      --color-background: #fdfbf7; /* Warm archival parchment */
+      --color-surface: #ffffff;
+      --color-text-primary: #1c1917; /* Warm black / ink */
+      --color-text-muted: #57534e;
+      --color-border: #e7e5e4;
+      --color-accent: #b45309;
+      --font-heading: "Playfair Display", Georgia, "Times New Roman", serif;
+      --font-body: "Charter", Georgia, "Times New Roman", serif;
+      --font-mono: "JetBrains Mono", Menlo, monospace;
+      --radius-sm: 2px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--color-background); color: var(--color-text-primary); line-height: 1.75; }
+    header { background: var(--color-surface); border-bottom: 2px solid var(--color-primary); padding: 2rem 1.5rem; text-align: center; }
+    .masthead-edition { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 0.5rem; }
+    .masthead-title { font-family: var(--font-heading); font-size: 2.75rem; font-weight: 700; letter-spacing: -0.02em; color: var(--color-text-primary); margin-bottom: 0.5rem; }
+    .masthead-nav { display: flex; justify-content: center; gap: 2rem; margin-top: 1.25rem; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .masthead-nav a { color: var(--color-text-primary); text-decoration: none; padding-bottom: 2px; border-bottom: 1px solid transparent; }
+    .masthead-nav a:hover, .masthead-nav a:focus-visible { border-bottom-color: var(--color-primary); outline: none; }
+    main { max-width: 960px; margin: 3rem auto; padding: 0 1.5rem; }
+    .featured-essay { background: var(--color-surface); border: 1px solid var(--color-border); padding: 3.5rem 3rem; margin-bottom: 3.5rem; box-shadow: 0 2px 8px rgba(28,25,23,0.04); }
+    .essay-category { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--color-primary); font-weight: 700; margin-bottom: 0.75rem; }
+    .essay-title { font-family: var(--font-heading); font-size: 2.25rem; line-height: 1.2; font-weight: 700; margin-bottom: 1rem; }
+    .essay-meta { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-text-muted); padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); margin-bottom: 2rem; }
+    .lead-paragraph::first-letter { font-family: var(--font-heading); font-size: 3.5rem; float: left; line-height: 0.85; margin-right: 0.75rem; margin-top: 0.15rem; color: var(--color-primary); }
+    .lead-paragraph { font-size: 1.15rem; margin-bottom: 1.5rem; }
+    blockquote { border-left: 3px solid var(--color-primary); background: #fbf9f4; padding: 1.5rem 2rem; margin: 2rem 0; font-family: var(--font-heading); font-size: 1.2rem; font-style: italic; color: #292524; }
+    blockquote cite { display: block; font-family: var(--font-mono); font-size: 0.8rem; font-style: normal; margin-top: 0.75rem; color: var(--color-text-muted); }
+    .curated-index { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
+    .index-article { background: var(--color-surface); border: 1px solid var(--color-border); padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .index-article .category { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; color: var(--color-accent); font-weight: 700; margin-bottom: 0.5rem; }
+    .index-article h3 { font-family: var(--font-heading); font-size: 1.25rem; line-height: 1.3; margin-bottom: 0.75rem; }
+    .index-article a { color: var(--color-primary); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; text-decoration: none; }
+    .index-article a:hover { text-decoration: underline; }
+    .dispatch-box { background: var(--color-surface); border: 2px solid var(--color-primary); padding: 3rem 2rem; text-align: center; }
+    .dispatch-box h3 { font-family: var(--font-heading); font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .dispatch-box p { font-size: 1rem; color: var(--color-text-muted); max-width: 540px; margin: 0 auto 1.75rem auto; }
+    .dispatch-form { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; max-width: 520px; margin: 0 auto; }
+    .input-group { display: flex; flex-direction: column; text-align: left; flex: 1; min-width: 260px; }
+    .input-group label { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.35rem; color: var(--color-text-muted); }
+    .dispatch-form input[type="email"] { min-height: 44px; padding: 10px 14px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: inherit; font-size: 1rem; }
+    .dispatch-form input[type="email"]:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+    .btn-dispatch { min-height: 44px; min-width: 44px; padding: 10px 24px; background: var(--color-primary); color: #ffffff; border: 1px solid transparent; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-dispatch:hover { background: var(--color-primary-hover); }
+    .btn-dispatch:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+    footer { border-top: 1px solid var(--color-border); background: var(--color-surface); padding: 2.5rem 1.5rem; text-align: center; font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-text-muted); }
+    @media (max-width: 640px) {
+      .masthead-title { font-size: 2rem; }
+      .featured-essay { padding: 2rem 1.25rem; }
+      .essay-title { font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="masthead-edition">Vol. XII · No. 4 · Autumn MMXXVI · ISSN 2491-091X</div>
+    <h1 class="masthead-title">POLYCHROME REVIEW</h1>
+    <nav class="masthead-nav" aria-label="Journal Sections">
+      <a href="/archive">Archive</a>
+      <a href="/monographs">Monographs</a>
+      <a href="/critique">Critique</a>
+      <a href="/symposium">Symposium</a>
+    </nav>
+  </header>
+  <main>
+    <article class="featured-essay" aria-labelledby="featured-essay-title">
+      <div class="essay-category">Long-Form Critical Theory</div>
+      <h2 id="featured-essay-title" class="essay-title">The Architecture of Silence: Spatial Contemplation in Modernist Prose</h2>
+      <div class="essay-meta">By Dr. Elena Vance · Senior Fellow in Comparative Poetics · 14 Min Read</div>
+      <p class="lead-paragraph">Modernism did not merely dismantle rhetorical ornamentation; it fundamentally reorganized the cadence of cognitive pause. When prose ceases to rush toward closure, physical and mental space becomes an active syntactical element.</p>
+      <p>In the expansive prose of the early twentieth century, silence operates not as absence, but as a deliberate architectural load-bearing column.</p>
+      <blockquote>
+        "The punctuation of architectural space carries equal gravity to the sentence itself; what remains unsaid structures the room."
+        <cite>— Spatial Poetics in the Continental Novel (Vance, Academic Press, 2024)</cite>
+      </blockquote>
+      <p>To analyze this requires stepping beyond standard narrative mechanics into phenomenology.</p>
+    </article>
+
+    <section class="curated-index" aria-label="Selected Essays from this Issue">
+      <article class="index-article">
+        <div>
+          <span class="category">Aesthetics</span>
+          <h3>Chromatic Dissonance: The Politics of Tone in Post-War Painting</h3>
+          <p>By Julian K. Bell</p>
+        </div>
+        <a href="/essays/chromatic-dissonance" aria-label="Read Chromatic Dissonance by Julian Bell">Read Monograph &rarr;</a>
+      </article>
+      <article class="index-article">
+        <div>
+          <span class="category">Media Theory</span>
+          <h3>Against the Ephemeral: Archival Durability in the Cloud Age</h3>
+          <p>By Sarah Chen</p>
+        </div>
+        <a href="/essays/against-the-ephemeral" aria-label="Read Against the Ephemeral by Sarah Chen">Read Monograph &rarr;</a>
+      </article>
+      <article class="index-article">
+        <div>
+          <span class="category">Historiography</span>
+          <h3>The Monastic Scriptoria and the Birth of Punctuation</h3>
+          <p>By Marcus Thorne</p>
+        </div>
+        <a href="/essays/monastic-scriptoria" aria-label="Read The Monastic Scriptoria by Marcus Thorne">Read Monograph &rarr;</a>
+      </article>
+    </section>
+
+    <section class="dispatch-box" aria-labelledby="dispatch-title">
+      <h3 id="dispatch-title">The Polychrome Dispatch</h3>
+      <p>Curated essays, monographs, and critical symposia delivered directly to your correspondence each Thursday morning.</p>
+      <form class="dispatch-form" onsubmit="event.preventDefault(); alert('Subscription confirmed.');">
+        <div class="input-group">
+          <label for="subscriber-email">Reader Email Address</label>
+          <input type="email" id="subscriber-email" name="subscriberEmail" required placeholder="scholar@university.edu" />
+        </div>
+        <button type="submit" class="btn-dispatch">Subscribe Dispatch</button>
+      </form>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2026 THE POLYCHROME REVIEW SOCIETY FOR CRITICAL INQUIRY. ALL RIGHTS RESERVED.</p>
+  </footer>
+</body>
+</html>

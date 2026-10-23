@@ -1,0 +1,47 @@
+{
+  "name": "zenitch-mcp",
+  "version": "1.0.0",
+  "description": "Zenitch MCP - AI-Powered UI/UX Design Intelligence and Verified Engineering Model Context Protocol Server",
+  "main": "dist/src/index.js",
+  "bin": {
+    "zenitch-mcp": "./dist/src/cli.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/cli.js",
+    "test": "node --test --test-concurrency=4 dist/tests/*.test.js",
+    "benchmark": "node ../../experiments/evaluation-benchmarks/benchmark-evaluator.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ui-ux",
+    "design-systems",
+    "antigravity",
+    "design-intelligence"
+  ],
+  "author": "Ajay M",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "typescript": "^5.8.2"
+  },
+  "types": "dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    }
+  },
+  "files": [
+    "dist/src",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ]
+}

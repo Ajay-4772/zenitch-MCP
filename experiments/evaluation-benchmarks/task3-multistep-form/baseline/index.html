@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CloudMesh Provisioning</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    .form-step { margin-bottom: 1.5rem; }
+    .error { color: red; font-size: 12px; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; }
+    .dialog-card { background: white; margin: 10% auto; padding: 2rem; width: 400px; }
+  </style>
+</head>
+<body>
+  <h1>Provision Cluster</h1>
+  <form id="cluster-form">
+    <div class="form-step">
+      <div>Cluster Name:</div>
+      <input type="text" name="clusterName" placeholder="my-cluster">
+      <div class="error">Name is required</div>
+    </div>
+    <div class="form-step">
+      <div>Region:</div>
+      <select name="region"><option>us-east-1</option></select>
+    </div>
+    <button type="button" onclick="document.querySelector('.modal-overlay').style.display='block'">Deploy Cluster</button>
+  </form>
+
+  <!-- Notice: Active dialog nested directly inside aria-hidden overlay -->
+  <div class="modal-overlay" aria-hidden="true">
+    <div class="dialog-card">
+      <h3>Confirm Deployment</h3>
+      <p>Are you sure you want to provision this cluster?</p>
+      <button onclick="document.querySelector('.modal-overlay').style.display='none'">Confirm</button>
+    </div>
+  </div>
+</body>
+</html>

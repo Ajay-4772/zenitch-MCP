@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudMesh Deploy — Managed Kubernetes Cluster Provisioning</title>
+  <style>
+    :root {
+      --color-primary: #2563eb;
+      --color-primary-hover: #1d4ed8;
+      --color-background: #f8fafc;
+      --color-surface: #ffffff;
+      --color-text-primary: #0f172a;
+      --color-text-muted: #64748b;
+      --color-border: #e2e8f0;
+      --color-error: #dc2626;
+      --radius-md: 6px;
+      --font-body: Inter, system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--color-background); color: var(--color-text-primary); padding: 2rem 1rem; }
+    main { max-width: 680px; margin: 0 auto; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .subtitle { color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .form-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    label { font-size: 0.9rem; font-weight: 600; }
+    input[type="text"], select { min-height: 44px; padding: 10px 14px; border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit; font-size: 1rem; }
+    input[aria-invalid="true"] { border-color: var(--color-error); }
+    input:focus-visible, select:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+    .error-msg { color: var(--color-error); font-size: 0.85rem; font-weight: 600; min-height: 1.25rem; }
+    .btn { min-width: 44px; min-height: 44px; padding: 12px 24px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; font-family: inherit; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-primary { background: var(--color-primary); color: #fff; border: 1px solid transparent; }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+    .btn-primary:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+    .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid var(--color-border); }
+    .btn-secondary:hover { background: #e2e8f0; }
+
+    /* Dialog styling: Decorative backdrop is a SEPARATE sibling */
+    .dialog-backdrop {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(2px); display: none; z-index: 40;
+    }
+    .dialog-container {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: #ffffff; border: 1px solid var(--color-border); border-radius: 8px;
+      width: 90%; max-width: 520px; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+      display: none; z-index: 50;
+    }
+    .dialog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .dialog-footer { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Provision Kubernetes Cluster</h1>
+    <p class="subtitle">Step 1 of 2: Infrastructure Configuration</p>
+    <form id="provision-form" novalidate onsubmit="event.preventDefault(); openConfirmModal();">
+      <div class="form-group">
+        <label for="cluster-name">Cluster Name <span aria-hidden="true">*</span></label>
+        <input type="text" id="cluster-name" name="clusterName" aria-required="true" aria-describedby="cluster-name-error" value="production-mesh-alpha" />
+        <p id="cluster-name-error" class="error-msg" role="alert"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="cloud-region">Cloud Deployment Region <span aria-hidden="true">*</span></label>
+        <select id="cloud-region" name="region" aria-required="true">
+          <option value="us-east-1">US East (N. Virginia)</option>
+          <option value="eu-central-1">Europe (Frankfurt)</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Review & Deploy Cluster</button>
+    </form>
+  </main>
+
+  <!-- Clean Separation: Backdrop overlay is sibling, never wraps active dialog -->
+  <div id="modal-backdrop" class="dialog-backdrop" aria-hidden="true" onclick="closeConfirmModal()"></div>
+
+  <div id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" class="dialog-container">
+    <div class="dialog-header">
+      <h2 id="confirm-modal-title">Confirm Cluster Provisioning</h2>
+      <button type="button" class="btn btn-secondary" aria-label="Close dialog" onclick="closeConfirmModal()">&times;</button>
+    </div>
+    <div class="dialog-body">
+      <p>Provisioning will allocate 3 worker nodes in <strong>US East (N. Virginia)</strong> under cluster name <strong>production-mesh-alpha</strong>. Ongoing hourly compute billing will begin immediately.</p>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+      <button type="button" class="btn btn-primary" onclick="alert('Cluster provisioning launched!'); closeConfirmModal();">Confirm Deployment</button>
+    </div>
+  </div>
+
+  <script>
+    function openConfirmModal() {
+      document.getElementById('modal-backdrop').style.display = 'block';
+      document.getElementById('confirm-modal').style.display = 'block';
+      document.querySelector('#confirm-modal .btn-primary').focus();
+    }
+    function closeConfirmModal() {
+      document.getElementById('modal-backdrop').style.display = 'none';
+      document.getElementById('confirm-modal').style.display = 'none';
+      document.querySelector('button[type="submit"]').focus();
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && document.getElementById('confirm-modal').style.display === 'block') {
+        closeConfirmModal();
+      }
+    });
+  </script>
+</body>
+</html>

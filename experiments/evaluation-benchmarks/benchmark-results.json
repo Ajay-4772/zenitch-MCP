@@ -1,0 +1,671 @@
+{
+  "evaluatorName": "Zenitch Benchmark Evaluator",
+  "evaluatorVersion": "2.0.0-evidence-based",
+  "timestamp": "2026-10-23T12:18:36.073Z",
+  "tasksCount": 3,
+  "artifactsEvaluatedCount": 6,
+  "results": [
+    {
+      "taskId": "task-1",
+      "taskName": "Responsive Landing Page",
+      "brief": "Neo-Brutalist Architecture Studio (\"KRAFTWERK\")",
+      "mode": "baseline",
+      "artifactPath": "../../experiments/evaluation-benchmarks/task1-landing-page/baseline/index.html",
+      "requirementCoverage": {
+        "passedCount": 3,
+        "failedCount": 3,
+        "notAssessedCount": 1,
+        "assessableCount": 6,
+        "coveragePercentage": 50,
+        "criteriaBreakdown": [
+          {
+            "criterionId": "REQ-T1-01-HEADER",
+            "title": "Branded Header Structure",
+            "description": "Header landmark containing studio or brand identity.",
+            "status": "PASS",
+            "reason": "Header landmark contains verified brand title."
+          },
+          {
+            "criterionId": "REQ-T1-02-NAV",
+            "title": "Functional Navigation Links",
+            "description": "Navigation element containing valid route targets (rejects dummy href=\"#\").",
+            "status": "FAIL",
+            "reason": "All 3 navigation links are dummy placeholders (href=\"#\")."
+          },
+          {
+            "criterionId": "REQ-T1-03-HERO",
+            "title": "Hero Section with Action CTA",
+            "description": "Prominent hero section containing an <h1> heading and a primary call-to-action button.",
+            "status": "PASS",
+            "reason": "Hero container with <h1> and primary CTA button present."
+          },
+          {
+            "criterionId": "REQ-T1-04-GRID",
+            "title": "Project Portfolio Grid",
+            "description": "Showcase grid displaying at least 3 distinct project or service items.",
+            "status": "PASS",
+            "reason": "Grid container contains 3 project items."
+          },
+          {
+            "criterionId": "REQ-T1-05-RESPONSIVE-NAV",
+            "title": "Mobile Navigation Adaptation",
+            "description": "Mobile navigation toggle control and responsive layout media query.",
+            "status": "FAIL",
+            "reason": "Missing responsive nav adaptation (hasToggle=false, hasMediaQuery=false)."
+          },
+          {
+            "criterionId": "REQ-T1-06-FOOTER",
+            "title": "Footer Landmark with Copyright",
+            "description": "Footer landmark containing copyright or ownership notices.",
+            "status": "FAIL",
+            "reason": "Missing <footer> landmark with copyright statement."
+          },
+          {
+            "criterionId": "REQ-T1-07-RUNTIME-LAYOUT",
+            "title": "Runtime Layout Geometry & Overflow",
+            "description": "Verification of rendered pixel dimensions and absence of horizontal overflow at 375px viewport.",
+            "status": "NOT_ASSESSED",
+            "reason": "Static analysis inspection only; rendered layout geometry requires browser layout engine."
+          }
+        ]
+      },
+      "staticAccessibility": {
+        "findingsCount": 2,
+        "errorsCount": 2,
+        "warningsCount": 0,
+        "policyScore": 50,
+        "findings": [
+          {
+            "policyId": "POL-A11Y-001",
+            "policyName": "Accessible Interactive Labeling",
+            "severity": "ERROR",
+            "category": "accessibility",
+            "evidence": "<button class=\"btn btn-tiny\"><svg viewBox=\"0 0 20 20\"><path d=\"M3 3h14v2H3z\"/></svg></button>"
+          },
+          {
+            "policyId": "POL-INT-001",
+            "policyName": "Functional Interactive Elements",
+            "severity": "ERROR",
+            "category": "interaction_design",
+            "evidence": "<a href=\"#\">"
+          }
+        ],
+        "limitationNote": "Static source analysis inspects source attributes and markup tokens only. Does not constitute WCAG certification or browser-runtime validation."
+      },
+      "deadInteractions": {
+        "deadLinksCount": 3,
+        "deadButtonsCount": 2,
+        "totalDeadIndicators": 5,
+        "evidence": [
+          "<a href=\"#\">",
+          "<a href=\"#\">",
+          "<a href=\"#\">",
+          "<button class=\"btn btn-tiny\">",
+          "<button class=\"btn\">"
+        ],
+        "limitationNote": "Dead-interaction indicators count static anti-patterns (e.g. href=\"#\", unhandled buttons). Static analysis cannot guarantee runtime interactivity without DOM event execution."
+      },
+      "staticResponsiveRisks": {
+        "risksCount": 2,
+        "risks": [
+          {
+            "id": "RESP-RISK-FIXED-COLUMNS",
+            "description": "Multi-column CSS grid lacks @media query breakpoint adaptation for small screens."
+          },
+          {
+            "id": "RESP-RISK-SUB-44PX-TARGET",
+            "description": "Interactive trigger declares hardcoded dimensions below the 44px mobile touch target guideline."
+          }
+        ],
+        "limitationNote": "Static responsive-risk indicators identify code-level patterns known to cause mobile viewport defects (hardcoded widths, missing media queries, sub-44px targets). This static inspection is not browser-runtime rendered layout verification."
+      },
+      "visualDistinctiveness": {
+        "type": "SUBJECTIVE_RUBRIC_EVALUATION",
+        "rubricCategory": "Visual Distinctiveness (Neo-Brutalist Aesthetic)",
+        "score": 35,
+        "rationale": "Generic soft indigo-to-purple gradient, standard rounded corners (8px), uncustomized system fonts, and generic card shadows.",
+        "rubricExplanation": "Evaluates authentic Neo-Brutalist design tokens (stark black/yellow palette, 0px sharp radii, hard shadows, monospaced typography) vs generic rounded indigo gradients."
+      },
+      "unrecordedMetrics": {
+        "implementationTimeSeconds": "NOT_RECORDED",
+        "repairIterationsCount": "NOT_RECORDED",
+        "rationale": "Implementation duration and repair iteration loops were not instrumented during authoring sessions. Fabricating numbers from defect counts is rejected for benchmark integrity."
+      },
+      "toolPerformance": {
+        "coldLatencyMs": 0,
+        "cachedLatencyMs": 0,
+        "toolErrorsCount": 0,
+        "timerScope": "Not applicable (Zenitch MCP tools not invoked in baseline condition)."
+      }
+    },
+    {
+      "taskId": "task-1",
+      "taskName": "Responsive Landing Page",
+      "brief": "Neo-Brutalist Architecture Studio (\"KRAFTWERK\")",
+      "mode": "assisted",
+      "artifactPath": "../../experiments/evaluation-benchmarks/task1-landing-page/assisted/index.html",
+      "requirementCoverage": {
+        "passedCount": 6,
+        "failedCount": 0,
+        "notAssessedCount": 1,
+        "assessableCount": 6,
+        "coveragePercentage": 100,
+        "criteriaBreakdown": [
+          {
+            "criterionId": "REQ-T1-01-HEADER",
+            "title": "Branded Header Structure",
+            "description": "Header landmark containing studio or brand identity.",
+            "status": "PASS",
+            "reason": "Header landmark contains verified brand title."
+          },
+          {
+            "criterionId": "REQ-T1-02-NAV",
+            "title": "Functional Navigation Links",
+            "description": "Navigation element containing valid route targets (rejects dummy href=\"#\").",
+            "status": "PASS",
+            "reason": "All 4 navigation links target descriptive paths."
+          },
+          {
+            "criterionId": "REQ-T1-03-HERO",
+            "title": "Hero Section with Action CTA",
+            "description": "Prominent hero section containing an <h1> heading and a primary call-to-action button.",
+            "status": "PASS",
+            "reason": "Hero container with <h1> and primary CTA button present."
+          },
+          {
+            "criterionId": "REQ-T1-04-GRID",
+            "title": "Project Portfolio Grid",
+            "description": "Showcase grid displaying at least 3 distinct project or service items.",
+            "status": "PASS",
+            "reason": "Grid container contains 3 project items."
+          },
+          {
+            "criterionId": "REQ-T1-05-RESPONSIVE-NAV",
+            "title": "Mobile Navigation Adaptation",
+            "description": "Mobile navigation toggle control and responsive layout media query.",
+            "status": "PASS",
+            "reason": "Includes mobile navigation toggle and responsive media queries."
+          },
+          {
+            "criterionId": "REQ-T1-06-FOOTER",
+            "title": "Footer Landmark with Copyright",
+            "description": "Footer landmark containing copyright or ownership notices.",
+            "status": "PASS",
+            "reason": "Footer landmark present with copyright statement."
+          },
+          {
+            "criterionId": "REQ-T1-07-RUNTIME-LAYOUT",
+            "title": "Runtime Layout Geometry & Overflow",
+            "description": "Verification of rendered pixel dimensions and absence of horizontal overflow at 375px viewport.",
+            "status": "NOT_ASSESSED",
+            "reason": "Static analysis inspection only; rendered layout geometry requires browser layout engine."
+          }
+        ]
+      },
+      "staticAccessibility": {
+        "findingsCount": 0,
+        "errorsCount": 0,
+        "warningsCount": 0,
+        "policyScore": 100,
+        "findings": [],
+        "limitationNote": "Static source analysis inspects source attributes and markup tokens only. Does not constitute WCAG certification or browser-runtime validation."
+      },
+      "deadInteractions": {
+        "deadLinksCount": 0,
+        "deadButtonsCount": 1,
+        "totalDeadIndicators": 1,
+        "evidence": [
+          "<button type=\"button\" class=\"mobile-nav-toggle\" aria-label=\"Toggle navigation menu\">"
+        ],
+        "limitationNote": "Dead-interaction indicators count static anti-patterns (e.g. href=\"#\", unhandled buttons). Static analysis cannot guarantee runtime interactivity without DOM event execution."
+      },
+      "staticResponsiveRisks": {
+        "risksCount": 0,
+        "risks": [],
+        "limitationNote": "Static responsive-risk indicators identify code-level patterns known to cause mobile viewport defects (hardcoded widths, missing media queries, sub-44px targets). This static inspection is not browser-runtime rendered layout verification."
+      },
+      "visualDistinctiveness": {
+        "type": "SUBJECTIVE_RUBRIC_EVALUATION",
+        "rubricCategory": "Visual Distinctiveness (Neo-Brutalist Aesthetic)",
+        "score": 95,
+        "rationale": "Authentic Neo-Brutalist tokens: #000000 borders, #facc15 yellow accent, hard 4px/6px drop-shadows, 0px border radius, and Space Grotesk / Space Mono typography.",
+        "rubricExplanation": "Evaluates authentic Neo-Brutalist design tokens (stark black/yellow palette, 0px sharp radii, hard shadows, monospaced typography) vs generic rounded indigo gradients."
+      },
+      "unrecordedMetrics": {
+        "implementationTimeSeconds": "NOT_RECORDED",
+        "repairIterationsCount": "NOT_RECORDED",
+        "rationale": "Implementation duration and repair iteration loops were not instrumented during authoring sessions. Fabricating numbers from defect counts is rejected for benchmark integrity."
+      },
+      "toolPerformance": {
+        "coldLatencyMs": 6.6,
+        "cachedLatencyMs": 0.52,
+        "toolErrorsCount": 0,
+        "timerScope": "In-process JavaScript execution time of generateDesignSystem and resolveComponent via performance.now()."
+      }
+    },
+    {
+      "taskId": "task-2",
+      "taskName": "Clinical Sample Dashboard",
+      "brief": "Clinical Laboratory (\"BioTriage\")",
+      "mode": "baseline",
+      "artifactPath": "../../experiments/evaluation-benchmarks/task2-data-dashboard/baseline/index.html",
+      "requirementCoverage": {
+        "passedCount": 4,
+        "failedCount": 1,
+        "notAssessedCount": 1,
+        "assessableCount": 5,
+        "coveragePercentage": 80,
+        "criteriaBreakdown": [
+          {
+            "criterionId": "REQ-T2-01-METRICS",
+            "title": "Key Metric Vitals Cards",
+            "description": "Minimum 3 distinct metrics summary cards displaying quantitative indicators.",
+            "status": "PASS",
+            "reason": "Dashboard contains 4 metric vitals cards."
+          },
+          {
+            "criterionId": "REQ-T2-02-FILTER-BAR",
+            "title": "Sample Search & Filter Controls",
+            "description": "Filter bar container with interactive query input and filter action trigger.",
+            "status": "PASS",
+            "reason": "Filter controls present with search input and trigger button."
+          },
+          {
+            "criterionId": "REQ-T2-03-DATA-TABLE",
+            "title": "Structured Tabular Data Grid",
+            "description": "Data table element with defined column header cells (<th>) and structured body rows.",
+            "status": "PASS",
+            "reason": "Data table present with 5 column headers and 3 rows."
+          },
+          {
+            "criterionId": "REQ-T2-04-ROW-ACTIONS",
+            "title": "Row-Level Action Triggers",
+            "description": "Action trigger buttons within table rows for reviewing or inspecting individual records.",
+            "status": "PASS",
+            "reason": "Table rows contain 2 row action trigger buttons."
+          },
+          {
+            "criterionId": "REQ-T2-05-EMPTY-OR-LOADING",
+            "title": "Empty State or Loading Feedback",
+            "description": "Explicit empty state indicator or loading container when no query matches.",
+            "status": "FAIL",
+            "reason": "Missing dedicated empty state or loading indicator in template."
+          },
+          {
+            "criterionId": "REQ-T2-06-ASYNC-DATA-FETCHING",
+            "title": "Live Async Data Transport & Error Handling",
+            "description": "Runtime network requests, cache updates, and asynchronous API error recovery.",
+            "status": "NOT_ASSESSED",
+            "reason": "Static analysis inspection only; live asynchronous network transport requires active runtime API environment."
+          }
+        ]
+      },
+      "staticAccessibility": {
+        "findingsCount": 1,
+        "errorsCount": 1,
+        "warningsCount": 0,
+        "policyScore": 75,
+        "findings": [
+          {
+            "policyId": "POL-A11Y-003",
+            "policyName": "Form Input Accessible Label & Error Linking",
+            "severity": "ERROR",
+            "category": "accessibility",
+            "evidence": "<input type=\"text\" placeholder=\"Search sample ID...\">"
+          }
+        ],
+        "limitationNote": "Static source analysis inspects source attributes and markup tokens only. Does not constitute WCAG certification or browser-runtime validation."
+      },
+      "deadInteractions": {
+        "deadLinksCount": 0,
+        "deadButtonsCount": 3,
+        "totalDeadIndicators": 3,
+        "evidence": [
+          "<button class=\"btn\">",
+          "<button class=\"btn\">",
+          "<button class=\"btn\">"
+        ],
+        "limitationNote": "Dead-interaction indicators count static anti-patterns (e.g. href=\"#\", unhandled buttons). Static analysis cannot guarantee runtime interactivity without DOM event execution."
+      },
+      "staticResponsiveRisks": {
+        "risksCount": 1,
+        "risks": [
+          {
+            "id": "RESP-RISK-NO-VIEWPORT",
+            "description": "Missing <meta name=\"viewport\"> tag; mobile browsers will render at desktop scale."
+          }
+        ],
+        "limitationNote": "Static responsive-risk indicators identify code-level patterns known to cause mobile viewport defects (hardcoded widths, missing media queries, sub-44px targets). This static inspection is not browser-runtime rendered layout verification."
+      },
+      "visualDistinctiveness": {
+        "type": "SUBJECTIVE_RUBRIC_EVALUATION",
+        "rubricCategory": "Visual Distinctiveness (Clinical Laboratory Interface)",
+        "score": 40,
+        "rationale": "Uncalibrated dark theme (#0b0f19) ill-suited for daylight clinical laboratory review; generic dark grey table lines with low contrast hierarchy.",
+        "rubricExplanation": "Evaluates high-contrast daylight clinical palettes (AAA contrast, high readability, semantic anomaly highlights) vs uncalibrated dark modes."
+      },
+      "unrecordedMetrics": {
+        "implementationTimeSeconds": "NOT_RECORDED",
+        "repairIterationsCount": "NOT_RECORDED",
+        "rationale": "Implementation duration and repair iteration loops were not instrumented during authoring sessions. Fabricating numbers from defect counts is rejected for benchmark integrity."
+      },
+      "toolPerformance": {
+        "coldLatencyMs": 0,
+        "cachedLatencyMs": 0,
+        "toolErrorsCount": 0,
+        "timerScope": "Not applicable (Zenitch MCP tools not invoked in baseline condition)."
+      }
+    },
+    {
+      "taskId": "task-2",
+      "taskName": "Clinical Sample Dashboard",
+      "brief": "Clinical Laboratory (\"BioTriage\")",
+      "mode": "assisted",
+      "artifactPath": "../../experiments/evaluation-benchmarks/task2-data-dashboard/assisted/index.html",
+      "requirementCoverage": {
+        "passedCount": 5,
+        "failedCount": 0,
+        "notAssessedCount": 1,
+        "assessableCount": 5,
+        "coveragePercentage": 100,
+        "criteriaBreakdown": [
+          {
+            "criterionId": "REQ-T2-01-METRICS",
+            "title": "Key Metric Vitals Cards",
+            "description": "Minimum 3 distinct metrics summary cards displaying quantitative indicators.",
+            "status": "PASS",
+            "reason": "Dashboard contains 10 metric vitals cards."
+          },
+          {
+            "criterionId": "REQ-T2-02-FILTER-BAR",
+            "title": "Sample Search & Filter Controls",
+            "description": "Filter bar container with interactive query input and filter action trigger.",
+            "status": "PASS",
+            "reason": "Filter controls present with search input and trigger button."
+          },
+          {
+            "criterionId": "REQ-T2-03-DATA-TABLE",
+            "title": "Structured Tabular Data Grid",
+            "description": "Data table element with defined column header cells (<th>) and structured body rows.",
+            "status": "PASS",
+            "reason": "Data table present with 5 column headers and 3 rows."
+          },
+          {
+            "criterionId": "REQ-T2-04-ROW-ACTIONS",
+            "title": "Row-Level Action Triggers",
+            "description": "Action trigger buttons within table rows for reviewing or inspecting individual records.",
+            "status": "PASS",
+            "reason": "Table rows contain 2 row action trigger buttons."
+          },
+          {
+            "criterionId": "REQ-T2-05-EMPTY-OR-LOADING",
+            "title": "Empty State or Loading Feedback",
+            "description": "Explicit empty state indicator or loading container when no query matches.",
+            "status": "PASS",
+            "reason": "Empty state or loading feedback container defined."
+          },
+          {
+            "criterionId": "REQ-T2-06-ASYNC-DATA-FETCHING",
+            "title": "Live Async Data Transport & Error Handling",
+            "description": "Runtime network requests, cache updates, and asynchronous API error recovery.",
+            "status": "NOT_ASSESSED",
+            "reason": "Static analysis inspection only; live asynchronous network transport requires active runtime API environment."
+          }
+        ]
+      },
+      "staticAccessibility": {
+        "findingsCount": 0,
+        "errorsCount": 0,
+        "warningsCount": 0,
+        "policyScore": 100,
+        "findings": [],
+        "limitationNote": "Static source analysis inspects source attributes and markup tokens only. Does not constitute WCAG certification or browser-runtime validation."
+      },
+      "deadInteractions": {
+        "deadLinksCount": 0,
+        "deadButtonsCount": 2,
+        "totalDeadIndicators": 2,
+        "evidence": [
+          "<button type=\"button\" class=\"btn btn-primary\" aria-label=\"Review critical sample SMP-8091\">",
+          "<button type=\"button\" class=\"btn btn-primary\" aria-label=\"Review sample SMP-8092\">"
+        ],
+        "limitationNote": "Dead-interaction indicators count static anti-patterns (e.g. href=\"#\", unhandled buttons). Static analysis cannot guarantee runtime interactivity without DOM event execution."
+      },
+      "staticResponsiveRisks": {
+        "risksCount": 0,
+        "risks": [],
+        "limitationNote": "Static responsive-risk indicators identify code-level patterns known to cause mobile viewport defects (hardcoded widths, missing media queries, sub-44px targets). This static inspection is not browser-runtime rendered layout verification."
+      },
+      "visualDistinctiveness": {
+        "type": "SUBJECTIVE_RUBRIC_EVALUATION",
+        "rubricCategory": "Visual Distinctiveness (Clinical Laboratory Interface)",
+        "score": 92,
+        "rationale": "High-contrast clinical daylight theme (#f8fafc / #ffffff), Sky-800 primary action tokens (7.23:1 AAA contrast), explicit critical badge highlights (#b91c1c), and clear typography hierarchy.",
+        "rubricExplanation": "Evaluates high-contrast daylight clinical palettes (AAA contrast, high readability, semantic anomaly highlights) vs uncalibrated dark modes."
+      },
+      "unrecordedMetrics": {
+        "implementationTimeSeconds": "NOT_RECORDED",
+        "repairIterationsCount": "NOT_RECORDED",
+        "rationale": "Implementation duration and repair iteration loops were not instrumented during authoring sessions. Fabricating numbers from defect counts is rejected for benchmark integrity."
+      },
+      "toolPerformance": {
+        "coldLatencyMs": 0.68,
+        "cachedLatencyMs": 0.52,
+        "toolErrorsCount": 0,
+        "timerScope": "In-process JavaScript execution time of generateDesignSystem and resolveComponent via performance.now()."
+      }
+    },
+    {
+      "taskId": "task-3",
+      "taskName": "Multi-Step Provisioning Form",
+      "brief": "Cloud Infrastructure (\"CloudMesh\")",
+      "mode": "baseline",
+      "artifactPath": "../../experiments/evaluation-benchmarks/task3-multistep-form/baseline/index.html",
+      "requirementCoverage": {
+        "passedCount": 3,
+        "failedCount": 2,
+        "notAssessedCount": 1,
+        "assessableCount": 5,
+        "coveragePercentage": 60,
+        "criteriaBreakdown": [
+          {
+            "criterionId": "REQ-T3-01-STEP-PROGRESSION",
+            "title": "Multi-Step Form Progression",
+            "description": "Multi-step form indicator or explicit step stage labeling.",
+            "status": "PASS",
+            "reason": "Form progression indicators or step containers present."
+          },
+          {
+            "criterionId": "REQ-T3-02-FORM-FIELDS",
+            "title": "Configuration Form Controls",
+            "description": "Form containing named input fields and selection controls for provisioning parameters.",
+            "status": "PASS",
+            "reason": "Form includes both named text inputs and selection controls."
+          },
+          {
+            "criterionId": "REQ-T3-03-CONFIRM-TRIGGER",
+            "title": "Submission & Review Action Trigger",
+            "description": "Submit or action button to advance to deployment confirmation review.",
+            "status": "PASS",
+            "reason": "Primary progression/deployment button present."
+          },
+          {
+            "criterionId": "REQ-T3-04-MODAL-DIALOG",
+            "title": "Confirmation Modal Dialog Landmark",
+            "description": "Accessible modal dialog container with role=\"dialog\" or <dialog>, aria-modal, and accessible heading name.",
+            "status": "FAIL",
+            "reason": "Dialog accessibility incomplete (hasRole=false, aria-modal=false, titleLink=false)."
+          },
+          {
+            "criterionId": "REQ-T3-05-BACKDROP-SEPARATION",
+            "title": "Dialog Backdrop Hierarchy Contract",
+            "description": "Decorative backdrop overlay is a separate sibling and does NOT enclose the active dialog inside an aria-hidden ancestor.",
+            "status": "FAIL",
+            "reason": "Active dialog is nested inside an ancestor marked aria-hidden=\"true\", which hides the dialog from screen readers."
+          },
+          {
+            "criterionId": "REQ-T3-06-RUNTIME-FOCUS-TRAP",
+            "title": "Runtime Keyboard Focus Trap & Escape Dismissal",
+            "description": "Active trapping of Tab / Shift+Tab keys and Escape key listener restoring focus on dismissal.",
+            "status": "NOT_ASSESSED",
+            "reason": "Static analysis inspection only; focus trap containment and keyboard event dispatch require browser runtime."
+          }
+        ]
+      },
+      "staticAccessibility": {
+        "findingsCount": 2,
+        "errorsCount": 2,
+        "warningsCount": 0,
+        "policyScore": 50,
+        "findings": [
+          {
+            "policyId": "POL-A11Y-003",
+            "policyName": "Form Input Accessible Label & Error Linking",
+            "severity": "ERROR",
+            "category": "accessibility",
+            "evidence": "<input type=\"text\" name=\"clusterName\" placeholder=\"my-cluster\">"
+          },
+          {
+            "policyId": "POL-A11Y-004",
+            "policyName": "Modal Dialog Overlay Accessibility Contract",
+            "severity": "ERROR",
+            "category": "accessibility",
+            "evidence": "<div class=\"modal-overlay\" aria-hidden=\"true\">"
+          }
+        ],
+        "limitationNote": "Static source analysis inspects source attributes and markup tokens only. Does not constitute WCAG certification or browser-runtime validation."
+      },
+      "deadInteractions": {
+        "deadLinksCount": 0,
+        "deadButtonsCount": 0,
+        "totalDeadIndicators": 0,
+        "evidence": [],
+        "limitationNote": "Dead-interaction indicators count static anti-patterns (e.g. href=\"#\", unhandled buttons). Static analysis cannot guarantee runtime interactivity without DOM event execution."
+      },
+      "staticResponsiveRisks": {
+        "risksCount": 1,
+        "risks": [
+          {
+            "id": "RESP-RISK-NO-VIEWPORT",
+            "description": "Missing <meta name=\"viewport\"> tag; mobile browsers will render at desktop scale."
+          }
+        ],
+        "limitationNote": "Static responsive-risk indicators identify code-level patterns known to cause mobile viewport defects (hardcoded widths, missing media queries, sub-44px targets). This static inspection is not browser-runtime rendered layout verification."
+      },
+      "visualDistinctiveness": {
+        "type": "SUBJECTIVE_RUBRIC_EVALUATION",
+        "rubricCategory": "Visual Distinctiveness (Minimal SaaS Aesthetic)",
+        "score": 50,
+        "rationale": "Basic browser default form inputs with rudimentary red error text; modal dialog is an unstyled centered white box without focus management cues.",
+        "rubricExplanation": "Evaluates structured enterprise form layout, clean micro-spacing, subtle card borders, and accessible focus states vs raw browser default forms."
+      },
+      "unrecordedMetrics": {
+        "implementationTimeSeconds": "NOT_RECORDED",
+        "repairIterationsCount": "NOT_RECORDED",
+        "rationale": "Implementation duration and repair iteration loops were not instrumented during authoring sessions. Fabricating numbers from defect counts is rejected for benchmark integrity."
+      },
+      "toolPerformance": {
+        "coldLatencyMs": 0,
+        "cachedLatencyMs": 0,
+        "toolErrorsCount": 0,
+        "timerScope": "Not applicable (Zenitch MCP tools not invoked in baseline condition)."
+      }
+    },
+    {
+      "taskId": "task-3",
+      "taskName": "Multi-Step Provisioning Form",
+      "brief": "Cloud Infrastructure (\"CloudMesh\")",
+      "mode": "assisted",
+      "artifactPath": "../../experiments/evaluation-benchmarks/task3-multistep-form/assisted/index.html",
+      "requirementCoverage": {
+        "passedCount": 5,
+        "failedCount": 0,
+        "notAssessedCount": 1,
+        "assessableCount": 5,
+        "coveragePercentage": 100,
+        "criteriaBreakdown": [
+          {
+            "criterionId": "REQ-T3-01-STEP-PROGRESSION",
+            "title": "Multi-Step Form Progression",
+            "description": "Multi-step form indicator or explicit step stage labeling.",
+            "status": "PASS",
+            "reason": "Form progression indicators or step containers present."
+          },
+          {
+            "criterionId": "REQ-T3-02-FORM-FIELDS",
+            "title": "Configuration Form Controls",
+            "description": "Form containing named input fields and selection controls for provisioning parameters.",
+            "status": "PASS",
+            "reason": "Form includes both named text inputs and selection controls."
+          },
+          {
+            "criterionId": "REQ-T3-03-CONFIRM-TRIGGER",
+            "title": "Submission & Review Action Trigger",
+            "description": "Submit or action button to advance to deployment confirmation review.",
+            "status": "PASS",
+            "reason": "Primary progression/deployment button present."
+          },
+          {
+            "criterionId": "REQ-T3-04-MODAL-DIALOG",
+            "title": "Confirmation Modal Dialog Landmark",
+            "description": "Accessible modal dialog container with role=\"dialog\" or <dialog>, aria-modal, and accessible heading name.",
+            "status": "PASS",
+            "reason": "Accessible modal dialog structure verified with role, aria-modal, and label link."
+          },
+          {
+            "criterionId": "REQ-T3-05-BACKDROP-SEPARATION",
+            "title": "Dialog Backdrop Hierarchy Contract",
+            "description": "Decorative backdrop overlay is a separate sibling and does NOT enclose the active dialog inside an aria-hidden ancestor.",
+            "status": "PASS",
+            "reason": "Decorative backdrop is separated outside the active dialog container hierarchy."
+          },
+          {
+            "criterionId": "REQ-T3-06-RUNTIME-FOCUS-TRAP",
+            "title": "Runtime Keyboard Focus Trap & Escape Dismissal",
+            "description": "Active trapping of Tab / Shift+Tab keys and Escape key listener restoring focus on dismissal.",
+            "status": "NOT_ASSESSED",
+            "reason": "Static analysis inspection only; focus trap containment and keyboard event dispatch require browser runtime."
+          }
+        ]
+      },
+      "staticAccessibility": {
+        "findingsCount": 0,
+        "errorsCount": 0,
+        "warningsCount": 0,
+        "policyScore": 100,
+        "findings": [],
+        "limitationNote": "Static source analysis inspects source attributes and markup tokens only. Does not constitute WCAG certification or browser-runtime validation."
+      },
+      "deadInteractions": {
+        "deadLinksCount": 0,
+        "deadButtonsCount": 0,
+        "totalDeadIndicators": 0,
+        "evidence": [],
+        "limitationNote": "Dead-interaction indicators count static anti-patterns (e.g. href=\"#\", unhandled buttons). Static analysis cannot guarantee runtime interactivity without DOM event execution."
+      },
+      "staticResponsiveRisks": {
+        "risksCount": 0,
+        "risks": [],
+        "limitationNote": "Static responsive-risk indicators identify code-level patterns known to cause mobile viewport defects (hardcoded widths, missing media queries, sub-44px targets). This static inspection is not browser-runtime rendered layout verification."
+      },
+      "visualDistinctiveness": {
+        "type": "SUBJECTIVE_RUBRIC_EVALUATION",
+        "rubricCategory": "Visual Distinctiveness (Minimal SaaS Aesthetic)",
+        "score": 90,
+        "rationale": "Minimal enterprise SaaS design tokens: structured form groups, custom input focus rings, 6px border radii, tinted dialog scrim with clean separation, and accessible error message linking.",
+        "rubricExplanation": "Evaluates structured enterprise form layout, clean micro-spacing, subtle card borders, and accessible focus states vs raw browser default forms."
+      },
+      "unrecordedMetrics": {
+        "implementationTimeSeconds": "NOT_RECORDED",
+        "repairIterationsCount": "NOT_RECORDED",
+        "rationale": "Implementation duration and repair iteration loops were not instrumented during authoring sessions. Fabricating numbers from defect counts is rejected for benchmark integrity."
+      },
+      "toolPerformance": {
+        "coldLatencyMs": 0.68,
+        "cachedLatencyMs": 2,
+        "toolErrorsCount": 0,
+        "timerScope": "In-process JavaScript execution time of generateDesignSystem and resolveComponent via performance.now()."
+      }
+    }
+  ]
+}

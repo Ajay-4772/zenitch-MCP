@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telehealth Emergency Triage & Vitals Monitoring Console | CarePoint Health</title>
+  <meta name="description" content="Clinical Telehealth Triage & Continuous Vitals Telemetry Console for emergency clinicians. Built using PXI architectural principles.">
+  <style>
+    /* ==========================================================================
+       PXI ARCHITECTURAL DESIGN SYSTEM — CLEAN SLATE ADMINISTRATIVE (HEALTHCARE)
+       ========================================================================== */
+    :root {
+      /* PXI Palette Tokens */
+      --color-primary: #2563eb;
+      --color-primary-hover: #1d4ed8;
+      --color-primary-subtle: #eff6ff;
+      --color-primary-border: #93c5fd;
+
+      --bg-surface-canvas: #f8fafc;
+      --bg-surface-card: #ffffff;
+      --bg-surface-inset: #f1f5f9;
+      --bg-surface-hover: #f8fafc;
+
+      --border-subtle: #e2e8f0;
+      --border-default: #cbd5e1;
+      --border-strong: #94a3b8;
+      --border-focus: #2563eb;
+
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-secondary: #334155;
+      --text-inverse: #ffffff;
+
+      /* Acuity Hierarchy Standards */
+      --acuity-immediate-bg: #fee2e2;
+      --acuity-immediate-border: #ef4444;
+      --acuity-immediate-text: #991b1b;
+      --acuity-immediate-solid: #dc2626;
+
+      --acuity-urgent-bg: #ffedd5;
+      --acuity-urgent-border: #f97316;
+      --acuity-urgent-text: #9a3412;
+      --acuity-urgent-solid: #ea580c;
+
+      --acuity-standard-bg: #ecfdf5;
+      --acuity-standard-border: #10b981;
+      --acuity-standard-text: #065f46;
+      --acuity-standard-solid: #059669;
+
+      /* Telemetry Status */
+      --status-nominal: #059669;
+      --status-warning: #d97706;
+      --status-critical: #dc2626;
+
+      /* Geometry & Elevation */
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --shadow-subtle: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+      --shadow-card: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+      --shadow-elevated: 0 10px 15px -3px rgba(15, 23, 42, 0.1), 0 4px 6px -4px rgba(15, 23, 42, 0.05);
+
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    /* Base Reset & Accessibility */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 14px;
+      font-family: var(--font-stack);
+      color: var(--text-main);
+      background-color: var(--bg-surface-canvas);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Accessibility Skip Link */
+    .skip-link {
+      position: absolute;
+      top: -120px;
+      left: 1rem;
+      background: var(--text-main);
+      color: #ffffff;
+      padding: 0.75rem 1.25rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      z-index: 10000;
+      text-decoration: none;
+      transition: top 0.15s ease-out;
+    }
+    .skip-link:focus {
+      top: 1rem;
+      outline: 3px solid #facc15;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+    }
+
+    /* Header Landmark */
+    .app-header {
+      background: #0f172a;
+      color: #ffffff;
+      border-bottom: 3px solid var(--color-primary);
+      padding: 0.75rem 1.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: var(--shadow-card);
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--color-primary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+    }
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .clinician-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid #334155;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      color: #e2e8f0;
+    }
+    .status-indicator-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+      animation: pulseGreen 1.8s infinite;
+    }
+    @keyframes pulseGreen {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .btn-control {
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-md);
+      border: 1px solid #334155;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.15s ease;
+    }
+    .btn-control:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: #ffffff;
+    }
+    .btn-control.active {
+      background: var(--color-primary);
+      border-color: #60a5fa;
+    }
+
+    /* PXI Navigation Landmark */
+    .app-nav {
+      background: var(--bg-surface-card);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.65rem 1.75rem;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .filter-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--bg-surface-inset);
+      padding: 0.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+    .nav-filter-btn {
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+    }
+    .nav-filter-btn:hover {
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--text-main);
+    }
+    .nav-filter-btn[aria-pressed="true"],
+    .nav-filter-btn.active {
+      background: var(--bg-surface-card);
+      color: var(--color-primary);
+      box-shadow: var(--shadow-subtle);
+      font-weight: 700;
+    }
+    .filter-count-badge {
+      font-size: 0.75rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 9999px;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      background: var(--border-subtle);
+      color: var(--text-main);
+    }
+    .nav-filter-btn[aria-pressed="true"] .filter-count-badge {
+      background: var(--color-primary-subtle);
+      color: var(--color-primary);
+    }
+
+    .search-sort-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-grow: 1;
+      max-width: 580px;
+      justify-content: flex-end;
+    }
+    .search-input-wrap {
+      position: relative;
+      flex-grow: 1;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.45rem 1.8rem 0.45rem 2.2rem;
+      font-size: 0.85rem;
+      font-family: inherit;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-card);
+      color: var(--text-main);
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .search-icon-svg {
+      position: absolute;
+      left: 0.65rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .select-dropdown {
+      padding: 0.45rem 0.75rem;
+      font-size: 0.82rem;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-card);
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* Main Console Workstation Layout */
+    .workstation-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      padding: 1.5rem 1.75rem;
+      max-width: 1920px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    @media (max-width: 1200px) {
+      .workstation-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Main Landmark Section */
+    .main-telemetry-hub {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      min-width: 0;
+    }
+
+    /* Multi-Metric Telemetry Cards Grid */
+    .telemetry-vitals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1rem;
+    }
+    .vital-telemetry-card {
+      background: var(--bg-surface-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-subtle);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .vital-telemetry-card:hover {
+      box-shadow: var(--shadow-card);
+    }
+    .vital-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+    .vital-card-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+    .vital-unit-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background: var(--bg-surface-inset);
+      padding: 0.1rem 0.4rem;
+      border-radius: var(--radius-sm);
+    }
+    .vital-card-value-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .vital-metric-number {
+      font-size: 1.85rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+    .vital-status-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-sm);
+    }
+    .vital-status-pill.nominal { background: #dcfce7; color: #166534; }
+    .vital-status-pill.warning { background: #fef3c7; color: #92400e; }
+    .vital-status-pill.critical { background: #fee2e2; color: #991b1b; }
+
+    .sparkline-svg {
+      width: 100%;
+      height: 24px;
+      margin-top: 0.65rem;
+    }
+
+    /* Queue Table Section */
+    .patient-queue-card {
+      background: var(--bg-surface-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .card-header-bar {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-surface-canvas);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .census-badge {
+      font-size: 0.75rem;
+      background: var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+
+    /* Semantic Accessible Table */
+    .table-container {
+      overflow-x: auto;
+      width: 100%;
+    }
+    .triage-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    .triage-table thead th {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 0.75rem 0.95rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid var(--color-primary);
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .triage-table thead th.sortable-th {
+      cursor: pointer;
+      user-select: none;
+    }
+    .triage-table thead th.sortable-th:hover {
+      background: #1e293b;
+    }
+    .triage-table tbody tr {
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background-color 0.15s ease;
+      cursor: pointer;
+    }
+    .triage-table tbody tr:hover {
+      background-color: #f1f5f9;
+    }
+    .triage-table tbody tr.row-selected {
+      background-color: #e0f2fe !important;
+      outline: 2px solid var(--color-primary);
+    }
+    .triage-table tbody td {
+      padding: 0.75rem 0.95rem;
+      vertical-align: middle;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Acuity Badges */
+    .acuity-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.25rem 0.55rem;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+    .acuity-badge.immediate {
+      background: var(--acuity-immediate-bg);
+      border: 1px solid var(--acuity-immediate-border);
+      color: var(--acuity-immediate-text);
+    }
+    .acuity-badge.urgent {
+      background: var(--acuity-urgent-bg);
+      border: 1px solid var(--acuity-urgent-border);
+      color: var(--acuity-urgent-text);
+    }
+    .acuity-badge.standard {
+      background: var(--acuity-standard-bg);
+      border: 1px solid var(--acuity-standard-border);
+      color: var(--acuity-standard-text);
+    }
+
+    /* Telemetry Table Cells */
+    .telemetry-metric-pill {
+      display: inline-flex;
+      flex-direction: column;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface-canvas);
+      min-width: 72px;
+      text-align: right;
+    }
+    .telemetry-metric-pill.critical-pulse {
+      background: #fee2e2;
+      border-color: #dc2626;
+      color: #7f1d1d;
+      animation: alertGlow 1.2s infinite;
+    }
+    .telemetry-metric-pill.warning-pulse {
+      background: #fef3c7;
+      border-color: #d97706;
+      color: #92400e;
+    }
+    @keyframes alertGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+      50% { box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); }
+    }
+
+    /* Aside Landmark: Clinical Alert Stream */
+    .alert-stream-aside {
+      background: var(--bg-surface-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+      height: fit-content;
+      max-height: calc(100vh - 160px);
+      position: sticky;
+      top: 130px;
+    }
+    .aside-header {
+      padding: 0.85rem 1.15rem;
+      background: var(--bg-surface-canvas);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .aside-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .alert-counter-badge {
+      background: var(--status-critical);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.1rem 0.45rem;
+      border-radius: 9999px;
+      font-family: var(--font-mono);
+    }
+
+    .alert-stream-feed {
+      padding: 0.85rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      flex-grow: 1;
+    }
+    .stream-alert-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.7rem;
+      background: var(--bg-surface-canvas);
+      position: relative;
+    }
+    .stream-alert-card.critical {
+      border-left: 4px solid var(--status-critical);
+      background: #fff5f5;
+      border-color: #fca5a5;
+    }
+    .stream-alert-card.warning {
+      border-left: 4px solid var(--status-warning);
+      background: #fffbeb;
+      border-color: #fcd34d;
+    }
+    .stream-alert-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.25rem;
+    }
+    .alert-sev-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.1rem 0.35rem;
+      border-radius: var(--radius-sm);
+    }
+    .stream-alert-card.critical .alert-sev-tag { background: #fee2e2; color: #991b1b; }
+    .stream-alert-card.warning .alert-sev-tag { background: #fef3c7; color: #92400e; }
+    .alert-timestamp {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+    .alert-patient-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .alert-body-text {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.35;
+      margin-bottom: 0.45rem;
+    }
+    .alert-btn-row {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .btn-alert-action {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-default);
+      background: #ffffff;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+    .btn-alert-action:hover {
+      background: var(--color-primary);
+      color: #ffffff;
+      border-color: var(--color-primary);
+    }
+
+    /* Modal / Drawer Dialog */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(2px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-window {
+      background: var(--bg-surface-card);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 880px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-elevated);
+      border: 1px solid var(--border-default);
+      overflow: hidden;
+      animation: modalSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalSlide {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-header-bar {
+      padding: 1rem 1.5rem;
+      background: #0f172a;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--color-primary);
+    }
+    .modal-close-button {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    .modal-close-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .modal-content-scroll {
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* Rhythm Strip Canvas */
+    .rhythm-box {
+      background: #020917;
+      border: 2px solid #0a2540;
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      color: #38bdf8;
+    }
+    .rhythm-box-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+      margin-bottom: 0.4rem;
+    }
+    .rhythm-canvas-elem {
+      width: 100%;
+      height: 85px;
+      background: #020917;
+      display: block;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Footer Landmark */
+    .app-footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 0.75rem 1.75rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* Screen Reader Utility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Accessible Skip Link -->
+  <a href="#main-triage-content" class="skip-link">Skip to Main Patient Triage Telemetry</a>
+
+  <!-- Header Landmark (REQ-T9-01-HEADER) -->
+  <header class="app-header" role="banner">
+    <div class="header-content">
+      <div class="brand-section">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">CarePoint Telehealth <span style="font-size: 0.72rem; background: var(--color-primary); padding: 2px 7px; border-radius: 4px;">TRIAGE HUB</span></h1>
+          <div class="brand-subtitle">Emergency Clinical Vitals Telemetry Console</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Clinician On-Duty Badge -->
+        <div class="clinician-status-badge" aria-label="Clinician on duty: Dr. Sarah Lin, MD, Emergency Triage Attending">
+          <span class="status-indicator-dot" aria-hidden="true"></span>
+          <span><strong>Dr. S. Lin, MD</strong> (On Duty)</span>
+          <span style="color: #64748b;">•</span>
+          <span id="shiftTimer" style="font-family: var(--font-mono); color: #38bdf8;">00:00:00 UTC</span>
+        </div>
+
+        <!-- Telemetry Stream Toggle -->
+        <button id="btnPauseTelemetry" class="btn-control" aria-pressed="false" aria-label="Pause or resume live telemetry feed (Spacebar)">
+          <span id="pauseFeedText">Pause Ticker</span>
+        </button>
+
+        <!-- Audio Alert Chime Toggle -->
+        <button id="btnToggleChime" class="btn-control" aria-pressed="false" aria-label="Toggle clinical audio alert chime (M)">
+          <span id="chimeBtnText">Chime: Off</span>
+        </button>
+
+        <!-- Keyboard Shortcuts Help -->
+        <button id="btnShortcutsHelp" class="btn-control" aria-label="View keyboard shortcuts guide (?)">
+          <kbd>?</kbd> Help
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Landmark (REQ-T9-04-TRIAGE-FILTER, PXI AC-EXP-01) -->
+  <nav class="app-nav" role="navigation" aria-label="Patient Triage Queue Filtering & View Controls">
+    <div class="filter-toolbar" role="toolbar" aria-label="Filter patient queue by acuity status">
+      <button class="nav-filter-btn active" data-acuity="ALL" aria-pressed="true" aria-current="page" id="filterTabAll">
+        All Patients <span class="filter-count-badge" id="countAll">10</span>
+      </button>
+      <button class="nav-filter-btn" data-acuity="IMMEDIATE" aria-pressed="false" id="filterTabImmediate">
+        Immediate (P1) <span class="filter-count-badge" id="countImmediate" style="background:#fee2e2; color:#991b1b;">3</span>
+      </button>
+      <button class="nav-filter-btn" data-acuity="URGENT" aria-pressed="false" id="filterTabUrgent">
+        Urgent (P2) <span class="filter-count-badge" id="countUrgent" style="background:#ffedd5; color:#9a3412;">4</span>
+      </button>
+      <button class="nav-filter-btn" data-acuity="STANDARD" aria-pressed="false" id="filterTabStandard">
+        Standard (P3) <span class="filter-count-badge" id="countStandard" style="background:#ecfdf5; color:#065f46;">3</span>
+      </button>
+    </div>
+
+    <div class="search-sort-bar">
+      <div class="search-input-wrap">
+        <svg class="search-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="queueSearchInput" class="search-input" placeholder="Search patient name, MRN, bay, or chief complaint... (/)" aria-label="Search patient queue">
+      </div>
+
+      <select id="sortQueueSelect" class="select-dropdown" aria-label="Sort triage table">
+        <option value="acuity-desc">Sort: Highest Acuity First</option>
+        <option value="hr-desc">Sort: Highest Heart Rate</option>
+        <option value="spo2-asc">Sort: Lowest Oxygen (SpO2)</option>
+        <option value="name-asc">Sort: Patient Name (A-Z)</option>
+      </select>
+    </div>
+  </nav>
+
+  <!-- Workstation Container: Main Landmark + Aside Landmark -->
+  <div class="workstation-container">
+    <!-- Main Content Landmark (REQ-T9-02-VITALS-GRID, REQ-T9-03-QUEUE-TABLE) -->
+    <main class="main-telemetry-hub" id="main-triage-content" role="main">
+      <!-- Multi-Metric Telemetry Cards Grid (REQ-T9-02-VITALS-GRID) -->
+      <section aria-labelledby="telemetry-vitals-heading">
+        <h2 id="telemetry-vitals-heading" class="sr-only">Clinical Telemetry Vital Signs Averages & Thresholds</h2>
+        <div class="telemetry-vitals-grid">
+          <!-- Heart Rate -->
+          <div class="vital-telemetry-card" id="cardHeartRate">
+            <div class="vital-card-header">
+              <span class="vital-card-title">Heart Rate (Pulse)</span>
+              <span class="vital-unit-tag">BPM</span>
+            </div>
+            <div class="vital-card-value-row">
+              <span class="vital-metric-number" id="avgHeartRate">94</span>
+              <span class="vital-status-pill nominal" id="statusPillHR">Nominal</span>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Ref: 60 - 100 BPM</div>
+            <svg class="sparkline-svg" id="sparkHR" viewBox="0 0 100 24" aria-hidden="true">
+              <polyline fill="none" stroke="#2563eb" stroke-width="2" points="0,14 20,12 40,16 60,8 80,11 100,10"/>
+            </svg>
+          </div>
+
+          <!-- Blood Pressure -->
+          <div class="vital-telemetry-card" id="cardBloodPressure">
+            <div class="vital-card-header">
+              <span class="vital-card-title">Blood Pressure</span>
+              <span class="vital-unit-tag">mmHg</span>
+            </div>
+            <div class="vital-card-value-row">
+              <span class="vital-metric-number" id="avgBloodPressure">136/84</span>
+              <span class="vital-status-pill warning" id="statusPillBP">Elevated</span>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Ref: 120 / 80 mmHg</div>
+            <svg class="sparkline-svg" id="sparkBP" viewBox="0 0 100 24" aria-hidden="true">
+              <polyline fill="none" stroke="#d97706" stroke-width="2" points="0,12 20,10 40,14 60,11 80,9 100,12"/>
+            </svg>
+          </div>
+
+          <!-- Oxygen Saturation SpO2 -->
+          <div class="vital-telemetry-card" id="cardOxygenSaturation">
+            <div class="vital-card-header">
+              <span class="vital-card-title">Oxygen Saturation (SpO₂)</span>
+              <span class="vital-unit-tag">Percent</span>
+            </div>
+            <div class="vital-card-value-row">
+              <span class="vital-metric-number" id="avgSpO2">94%</span>
+              <span class="vital-status-pill warning" id="statusPillSpO2">Desat Alert</span>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Ref: 95 - 100%</div>
+            <svg class="sparkline-svg" id="sparkSpO2" viewBox="0 0 100 24" aria-hidden="true">
+              <polyline fill="none" stroke="#059669" stroke-width="2" points="0,8 20,9 40,11 60,14 80,12 100,15"/>
+            </svg>
+          </div>
+
+          <!-- Body Temperature -->
+          <div class="vital-telemetry-card" id="cardBodyTemp">
+            <div class="vital-card-header">
+              <span class="vital-card-title">Core Temperature</span>
+              <span class="vital-unit-tag">°C</span>
+            </div>
+            <div class="vital-card-value-row">
+              <span class="vital-metric-number" id="avgTemp">37.8°</span>
+              <span class="vital-status-pill nominal" id="statusPillTemp">Nominal</span>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Ref: 36.5 - 37.5°C</div>
+            <svg class="sparkline-svg" id="sparkTemp" viewBox="0 0 100 24" aria-hidden="true">
+              <polyline fill="none" stroke="#64748b" stroke-width="2" points="0,15 20,14 40,13 60,11 80,12 100,11"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Patient Triage Queue Table (REQ-T9-03-QUEUE-TABLE) -->
+      <section class="patient-queue-card" aria-labelledby="queue-table-heading">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2 id="queue-table-heading" class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              Urgent Patient Triage Telemetry Grid
+            </h2>
+            <span class="census-badge" id="queueCensusLabel">10 Patients Monitored</span>
+          </div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">
+            Click row or press <kbd>Enter</kbd> to inspect Lead II rhythm
+          </div>
+        </div>
+
+        <div class="table-container" tabindex="0" role="region" aria-label="Patient Telemetry Triage Table">
+          <table class="triage-table" id="patientTriageTable">
+            <caption class="sr-only">Live emergency department patient triage queue with vital sign telemetry</caption>
+            <thead>
+              <tr>
+                <th scope="col" style="width: 110px;">Acuity</th>
+                <th scope="col" class="sortable-th" data-sort="name">Patient & MRN</th>
+                <th scope="col" style="width: 85px;">Bay</th>
+                <th scope="col">Chief Complaint & Triage Notes</th>
+                <th scope="col" class="sortable-th" data-sort="hr" style="width: 95px; text-align: right;">HR (BPM)</th>
+                <th scope="col" class="sortable-th" data-sort="bp" style="width: 105px; text-align: right;">BP (mmHg)</th>
+                <th scope="col" class="sortable-th" data-sort="spo2" style="width: 90px; text-align: right;">SpO₂ (%)</th>
+                <th scope="col" class="sortable-th" data-sort="temp" style="width: 90px; text-align: right;">Temp (°C)</th>
+                <th scope="col" style="width: 90px; text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="triageTableBody">
+              <!-- Rendered via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Aside Landmark: Clinical Alert Stream (REQ-T9-05-ALERT-STREAM) -->
+    <aside class="alert-stream-aside" role="region" aria-labelledby="alert-stream-title" aria-live="polite">
+      <div class="aside-header">
+        <h3 id="alert-stream-title" class="aside-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" aria-hidden="true">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          Active Clinical Alerts
+        </h3>
+        <span class="alert-counter-badge" id="activeAlertCount">3 Alerts</span>
+      </div>
+
+      <div class="alert-stream-feed" id="alertFeedList" role="log" aria-live="polite">
+        <!-- Rendered via JavaScript -->
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer Landmark (REQ-T9-06-A11Y-LANDMARKS) -->
+  <footer class="app-footer" role="contentinfo">
+    <div>
+      <strong>CarePoint Health Telehealth Systems</strong> • Emergency Department Tele-Triage v3.1 (PXI Architecture)
+    </div>
+    <div style="font-family: var(--font-mono);">
+      WCAG 2.1 AAA Compliant Daylight Theme • 1.0s Continuous Telemetry Sweep
+    </div>
+  </footer>
+
+  <!-- Patient Telemetry Lead II Modal -->
+  <div class="modal-backdrop" id="patientModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalPatientHeading" aria-hidden="true">
+    <div class="modal-window" tabindex="-1">
+      <div class="modal-header-bar">
+        <div>
+          <h2 id="modalPatientHeading" style="font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:0.5rem;">
+            <span id="modalPatientName">Jane Doe</span>
+            <span id="modalPatientAcuity" class="acuity-badge immediate">IMMEDIATE</span>
+          </h2>
+          <div id="modalPatientMeta" style="font-size:0.78rem; color:#94a3b8; font-family:var(--font-mono);">
+            MRN: 9021-441 | Age: 58F | Bay 01 - Trauma
+          </div>
+        </div>
+        <button class="modal-close-button" id="btnModalClose" aria-label="Close patient telemetry details (Escape)">&times;</button>
+      </div>
+
+      <div class="modal-content-scroll">
+        <!-- Lead II ECG Waveform Animator -->
+        <div class="rhythm-box">
+          <div class="rhythm-box-header">
+            <span>Continuous Lead II ECG Rhythm (Live Sweep)</span>
+            <span style="color:#38bdf8; font-family:var(--font-mono);" id="modalRhythmStatus">Normative Sinus | 25mm/s</span>
+          </div>
+          <canvas id="rhythmCanvas" class="rhythm-canvas-elem" width="800" height="85" aria-label="ECG wave animation"></canvas>
+        </div>
+
+        <!-- Detail Vitals Grid -->
+        <div class="telemetry-vitals-grid">
+          <div class="vital-telemetry-card">
+            <span class="vital-card-title">Heart Rate</span>
+            <span class="vital-metric-number" id="modalValHR">124</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Ref: 60 - 100 BPM</span>
+          </div>
+          <div class="vital-telemetry-card">
+            <span class="vital-card-title">Blood Pressure</span>
+            <span class="vital-metric-number" id="modalValBP">182/104</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Ref: 120 / 80 mmHg</span>
+          </div>
+          <div class="vital-telemetry-card">
+            <span class="vital-card-title">Oxygen Saturation</span>
+            <span class="vital-metric-number" id="modalValSpO2">91%</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Ref: 95 - 100%</span>
+          </div>
+          <div class="vital-telemetry-card">
+            <span class="vital-card-title">Core Temp</span>
+            <span class="vital-metric-number" id="modalValTemp">37.4°C</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Ref: 36.5 - 37.5°C</span>
+          </div>
+        </div>
+
+        <!-- Presenting History & Notes -->
+        <div style="background:var(--bg-surface-canvas); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:1rem;">
+          <h4 style="font-size:0.85rem; font-weight:700; color:var(--text-main); margin-bottom:0.4rem;">Chief Complaint & Triage Presentation</h4>
+          <p id="modalComplaintText" style="font-size:0.85rem; color:var(--text-secondary); line-height:1.45;"></p>
+        </div>
+
+        <div>
+          <label for="modalClinicianDirective" style="font-size:0.82rem; font-weight:700; color:var(--text-main);">Attending Clinician Orders & Disposition Note:</label>
+          <textarea id="modalClinicianDirective" style="width:100%; min-height:75px; padding:0.65rem; border:1px solid var(--border-default); border-radius:var(--radius-md); font-family:inherit; font-size:0.85rem; margin-top:0.4rem;" placeholder="Enter medication orders, tele-RN titration orders, or disposition instructions..."></textarea>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
+            <button id="btnSaveDirective" class="btn-control active" style="padding:0.4rem 0.85rem;">Save Clinical Directive</button>
+            <button id="btnDispatchTeleRN" class="btn-control" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc;">Dispatch Tele-RN Link</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC & TELEMETRY ENGINE -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* Patient Seed Dataset */
+      const PATIENTS = [
+        {
+          id: 'PT-101',
+          name: 'Arthur Vance',
+          mrn: '9841-209',
+          bay: 'Bay 01',
+          acuity: 'IMMEDIATE',
+          complaint: 'Crushing retrosternal chest pain with left arm radiation, diaphoresis',
+          vitals: { hr: 128, bpSys: 184, bpDia: 104, spo2: 90, temp: 37.4 }
+        },
+        {
+          id: 'PT-102',
+          name: 'Elena Rostova',
+          mrn: '7721-884',
+          bay: 'Bay 02',
+          acuity: 'IMMEDIATE',
+          complaint: 'High-speed motor collision, blunt thoraco-abdominal trauma, tachypnea',
+          vitals: { hr: 136, bpSys: 86, bpDia: 50, spo2: 89, temp: 35.8 }
+        },
+        {
+          id: 'PT-103',
+          name: 'Marcus Sterling',
+          mrn: '6540-112',
+          bay: 'Bay 03',
+          acuity: 'IMMEDIATE',
+          complaint: 'Severe anaphylactic stridor post-contrast administration, lip edema',
+          vitals: { hr: 142, bpSys: 84, bpDia: 48, spo2: 88, temp: 37.1 }
+        },
+        {
+          id: 'PT-104',
+          name: 'Fatima Al-Mansoor',
+          mrn: '5412-309',
+          bay: 'Bay 04',
+          acuity: 'URGENT',
+          complaint: 'Acute hypercapnic respiratory distress, severe COPD exacerbation',
+          vitals: { hr: 106, bpSys: 148, bpDia: 88, spo2: 91, temp: 38.6 }
+        },
+        {
+          id: 'PT-105',
+          name: 'David K. Cohen',
+          mrn: '4399-771',
+          bay: 'Bay 05',
+          acuity: 'URGENT',
+          complaint: 'Sepsis alert: high fever, right flank tenderness, altered sensorium',
+          vitals: { hr: 116, bpSys: 98, bpDia: 60, spo2: 94, temp: 39.3 }
+        },
+        {
+          id: 'PT-106',
+          name: 'Chloe Tremblay',
+          mrn: '3218-440',
+          bay: 'Bay 06',
+          acuity: 'URGENT',
+          complaint: 'Diabetic Ketoacidosis (DKA), rapid Kussmaul respirations, dehydration',
+          vitals: { hr: 110, bpSys: 110, bpDia: 68, spo2: 96, temp: 36.9 }
+        },
+        {
+          id: 'PT-107',
+          name: 'Julian Navarro',
+          mrn: '2981-665',
+          bay: 'Bay 07',
+          acuity: 'URGENT',
+          complaint: 'Atrial fibrillation with rapid ventricular response (RVR)',
+          vitals: { hr: 130, bpSys: 136, bpDia: 88, spo2: 97, temp: 36.7 }
+        },
+        {
+          id: 'PT-108',
+          name: 'Siddharth Patel',
+          mrn: '1872-990',
+          bay: 'Bay 08',
+          acuity: 'STANDARD',
+          complaint: 'Closed forearm deformity following sports injury, distal pulse intact',
+          vitals: { hr: 76, bpSys: 122, bpDia: 78, spo2: 99, temp: 36.8 }
+        },
+        {
+          id: 'PT-109',
+          name: 'Hannah Abbott',
+          mrn: '1540-221',
+          bay: 'Bay 09',
+          acuity: 'STANDARD',
+          complaint: 'Right lower quadrant abdominal pain, rule out early appendicitis',
+          vitals: { hr: 82, bpSys: 118, bpDia: 74, spo2: 98, temp: 37.2 }
+        },
+        {
+          id: 'PT-110',
+          name: 'Gabriel Morales',
+          mrn: '1209-554',
+          bay: 'Bay 10',
+          acuity: 'STANDARD',
+          complaint: 'Minor hand laceration from broken glass, hemostasis achieved',
+          vitals: { hr: 70, bpSys: 120, bpDia: 76, spo2: 100, temp: 36.7 }
+        }
+      ];
+
+      /* Initial Active Alerts */
+      let alerts = [
+        {
+          id: 'ALT-01',
+          severity: 'critical',
+          patientName: 'Arthur Vance (Bay 01)',
+          message: 'CRITICAL HYPOXIA & ST-ELEVATION: SpO₂ 90%, HR 128 BPM. Acute coronary syndrome alert.',
+          time: '05:38:12',
+          patientId: 'PT-101'
+        },
+        {
+          id: 'ALT-02',
+          severity: 'critical',
+          patientName: 'Elena Rostova (Bay 02)',
+          message: 'HYPOTENSIVE SHOCK COLLAPSE: BP 86/50 mmHg, HR 136 BPM. Trauma resus standby.',
+          time: '05:37:45',
+          patientId: 'PT-102'
+        },
+        {
+          id: 'ALT-03',
+          severity: 'warning',
+          patientName: 'David K. Cohen (Bay 05)',
+          message: 'HIGH PYREXIA ALERT: Temp 39.3°C with sustained sinus tachycardia (116 BPM).',
+          time: '05:35:10',
+          patientId: 'PT-105'
+        }
+      ];
+
+      /* Application State */
+      let activeFilter = 'ALL';
+      let searchQuery = '';
+      let sortCriteria = 'acuity-desc';
+      let isStreaming = true;
+      let isChimeActive = false;
+      let selectedPatientId = null;
+      let audioCtx = null;
+      let ecgAnimId = null;
+
+      /* Web Audio Synthesizer */
+      function beep(freq = 880, dur = 0.15) {
+        if (!isChimeActive) return;
+        try {
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.2, audioCtx.currentTime + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + dur);
+        } catch (e) {
+          console.warn('Audio blocked', e);
+        }
+      }
+
+      /* Vitals Classification */
+      function classifyVitals(v) {
+        const isHRCrit = v.hr > 120 || v.hr < 48;
+        const isHRWarn = v.hr > 100 || v.hr < 55;
+        const isBPCrit = v.bpSys >= 170 || v.bpSys < 88;
+        const isSpO2Crit = v.spo2 < 90;
+        const isSpO2Warn = v.spo2 < 94;
+        const isTempCrit = v.temp >= 39.0;
+
+        return {
+          hr: isHRCrit ? 'critical' : (isHRWarn ? 'warning' : 'nominal'),
+          bp: isBPCrit ? 'critical' : 'nominal',
+          spo2: isSpO2Crit ? 'critical' : (isSpO2Warn ? 'warning' : 'nominal'),
+          temp: isTempCrit ? 'critical' : 'nominal'
+        };
+      }
+
+      /* Render Triage Queue */
+      function renderTable() {
+        const tbody = document.getElementById('triageTableBody');
+        tbody.innerHTML = '';
+
+        let filtered = PATIENTS.filter(p => {
+          if (activeFilter !== 'ALL' && p.acuity !== activeFilter) return false;
+          if (searchQuery.trim() !== '') {
+            const q = searchQuery.toLowerCase();
+            return p.name.toLowerCase().includes(q) ||
+                   p.mrn.toLowerCase().includes(q) ||
+                   p.bay.toLowerCase().includes(q) ||
+                   p.complaint.toLowerCase().includes(q);
+          }
+          return true;
+        });
+
+        // Sorting
+        filtered.sort((a, b) => {
+          if (sortCriteria === 'acuity-desc') {
+            const ranks = { IMMEDIATE: 3, URGENT: 2, STANDARD: 1 };
+            return ranks[b.acuity] - ranks[a.acuity];
+          }
+          if (sortCriteria === 'hr-desc') return b.vitals.hr - a.vitals.hr;
+          if (sortCriteria === 'spo2-asc') return a.vitals.spo2 - b.vitals.spo2;
+          if (sortCriteria === 'name-asc') return a.name.localeCompare(b.name);
+          return 0;
+        });
+
+        document.getElementById('queueCensusLabel').textContent = `${filtered.length} of ${PATIENTS.length} Monitored`;
+
+        filtered.forEach(p => {
+          const row = document.createElement('tr');
+          row.setAttribute('tabindex', '0');
+          row.setAttribute('role', 'row');
+          row.setAttribute('aria-label', `${p.name}, Acuity ${p.acuity}, Heart Rate ${p.vitals.hr}`);
+          if (selectedPatientId === p.id) row.classList.add('row-selected');
+
+          const stat = classifyVitals(p.vitals);
+
+          row.innerHTML = `
+            <td>
+              <span class="acuity-badge ${p.acuity.toLowerCase()}">
+                <span style="width:6px; height:6px; border-radius:50%; background:currentColor;"></span>
+                ${p.acuity}
+              </span>
+            </td>
+            <td>
+              <strong>${p.name}</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">MRN: ${p.mrn}</div>
+            </td>
+            <td><span style="font-weight:700; background:var(--bg-surface-inset); padding:2px 6px; border-radius:4px; font-size:0.75rem;">${p.bay}</span></td>
+            <td style="max-width:280px;">
+              <div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.complaint}</div>
+            </td>
+            <td style="text-align:right;">
+              <span class="telemetry-metric-pill ${stat.hr === 'critical' ? 'critical-pulse' : (stat.hr === 'warning' ? 'warning-pulse' : '')}">
+                <strong>${p.vitals.hr}</strong>
+              </span>
+            </td>
+            <td style="text-align:right;">
+              <span class="telemetry-metric-pill ${stat.bp === 'critical' ? 'critical-pulse' : ''}">
+                <strong>${p.vitals.bpSys}/${p.vitals.bpDia}</strong>
+              </span>
+            </td>
+            <td style="text-align:right;">
+              <span class="telemetry-metric-pill ${stat.spo2 === 'critical' ? 'critical-pulse' : (stat.spo2 === 'warning' ? 'warning-pulse' : '')}">
+                <strong>${p.vitals.spo2}%</strong>
+              </span>
+            </td>
+            <td style="text-align:right;">
+              <span class="telemetry-metric-pill ${stat.temp === 'critical' ? 'critical-pulse' : ''}">
+                <strong>${p.vitals.temp.toFixed(1)}°</strong>
+              </span>
+            </td>
+            <td style="text-align:center;">
+              <button class="btn-control" style="font-size:0.72rem; padding:0.25rem 0.5rem; color:var(--text-main); border-color:var(--border-default); background:#ffffff;" aria-label="Open telemetry monitor for ${p.name}">
+                Monitor
+              </button>
+            </td>
+          `;
+
+          row.addEventListener('click', () => openModal(p.id));
+          row.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openModal(p.id);
+            }
+          });
+
+          tbody.appendChild(row);
+        });
+
+        updateCounts();
+      }
+
+      /* Update Badge Counts */
+      function updateCounts() {
+        document.getElementById('countAll').textContent = PATIENTS.length;
+        document.getElementById('countImmediate').textContent = PATIENTS.filter(p => p.acuity === 'IMMEDIATE').length;
+        document.getElementById('countUrgent').textContent = PATIENTS.filter(p => p.acuity === 'URGENT').length;
+        document.getElementById('countStandard').textContent = PATIENTS.filter(p => p.acuity === 'STANDARD').length;
+      }
+
+      /* Render Alert Stream */
+      function renderAlerts() {
+        const feed = document.getElementById('alertFeedList');
+        feed.innerHTML = '';
+        document.getElementById('activeAlertCount').textContent = `${alerts.length} Alerts`;
+
+        if (alerts.length === 0) {
+          feed.innerHTML = `
+            <div style="text-align:center; padding:2rem 1rem; color:var(--text-muted); font-size:0.82rem;">
+              ✓ All clinical alerts resolved. Continuous telemetry monitoring nominal.
+            </div>
+          `;
+          return;
+        }
+
+        alerts.forEach((alert, idx) => {
+          const card = document.createElement('div');
+          card.className = `stream-alert-card ${alert.severity}`;
+          card.innerHTML = `
+            <div class="stream-alert-header">
+              <span class="alert-sev-tag">${alert.severity}</span>
+              <span class="alert-timestamp">${alert.time}</span>
+            </div>
+            <strong class="alert-patient-name">${alert.patientName}</strong>
+            <div class="alert-body-text">${alert.message}</div>
+            <div class="alert-btn-row">
+              <button class="btn-alert-action" data-idx="${idx}">✓ Ack</button>
+              <button class="btn-alert-action" data-pid="${alert.patientId}">Focus Patient</button>
+            </div>
+          `;
+
+          card.querySelector('[data-idx]').addEventListener('click', () => {
+            alerts.splice(idx, 1);
+            renderAlerts();
+          });
+          card.querySelector('[data-pid]').addEventListener('click', () => {
+            openModal(alert.patientId);
+          });
+
+          feed.appendChild(card);
+        });
+      }
+
+      /* Lead II ECG Animation */
+      let ecgX = 0;
+      let ecgPoints = [];
+      function startECG() {
+        const canvas = document.getElementById('rhythmCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        const midY = h / 2;
+        ecgPoints = new Array(w).fill(midY);
+        ecgX = 0;
+
+        function draw() {
+          if (!selectedPatientId) return;
+          const p = PATIENTS.find(item => item.id === selectedPatientId);
+          const hr = p ? p.vitals.hr : 80;
+          const speed = Math.max(1, Math.round(hr / 35));
+
+          for (let s = 0; s < speed; s++) {
+            ecgX = (ecgX + 1) % w;
+            const phase = ecgX % 70;
+            let y = midY;
+            if (phase === 15) y = midY - 5;
+            else if (phase === 25) y = midY + 4;
+            else if (phase === 28) y = midY - 34; // R spike
+            else if (phase === 31) y = midY + 12;
+            else if (phase === 42) y = midY - 8;
+            else y = midY + (Math.random() - 0.5) * 1.5;
+            ecgPoints[ecgX] = y;
+          }
+
+          ctx.fillStyle = '#020917';
+          ctx.fillRect(0, 0, w, h);
+
+          // Grid lines
+          ctx.strokeStyle = '#092347';
+          ctx.lineWidth = 1;
+          for (let gx = 0; gx < w; gx += 20) {
+            ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke();
+          }
+          for (let gy = 0; gy < h; gy += 15) {
+            ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
+          }
+
+          // ECG Line
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          for (let i = 0; i < w; i++) {
+            if (Math.abs(i - ecgX) < 10) continue;
+            if (i === 0) ctx.moveTo(0, ecgPoints[0]);
+            else ctx.lineTo(i, ecgPoints[i]);
+          }
+          ctx.stroke();
+
+          // Sweep cursor
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(ecgX, ecgPoints[ecgX], 3, 0, Math.PI * 2);
+          ctx.fill();
+
+          ecgAnimId = requestAnimationFrame(draw);
+        }
+
+        if (ecgAnimId) cancelAnimationFrame(ecgAnimId);
+        ecgAnimId = requestAnimationFrame(draw);
+      }
+
+      /* Modal Dialog Controller */
+      function openModal(patientId) {
+        const p = PATIENTS.find(item => item.id === patientId);
+        if (!p) return;
+        selectedPatientId = patientId;
+
+        document.getElementById('modalPatientName').textContent = p.name;
+        const acuityElem = document.getElementById('modalPatientAcuity');
+        acuityElem.textContent = p.acuity;
+        acuityElem.className = `acuity-badge ${p.acuity.toLowerCase()}`;
+        document.getElementById('modalPatientMeta').textContent = `MRN: ${p.mrn} | ${p.bay} | CarePoint Telehealth Telemetry`;
+        document.getElementById('modalComplaintText').textContent = p.complaint;
+
+        document.getElementById('modalValHR').textContent = p.vitals.hr;
+        document.getElementById('modalValBP').textContent = `${p.vitals.bpSys}/${p.vitals.bpDia}`;
+        document.getElementById('modalValSpO2').textContent = `${p.vitals.spo2}%`;
+        document.getElementById('modalValTemp').textContent = `${p.vitals.temp.toFixed(1)}°C`;
+
+        const backdrop = document.getElementById('patientModalBackdrop');
+        backdrop.classList.add('open');
+        backdrop.setAttribute('aria-hidden', 'false');
+        backdrop.querySelector('.modal-window').focus();
+
+        startECG();
+        renderTable();
+      }
+
+      function closeModal() {
+        const backdrop = document.getElementById('patientModalBackdrop');
+        backdrop.classList.remove('open');
+        backdrop.setAttribute('aria-hidden', 'true');
+        selectedPatientId = null;
+        if (ecgAnimId) {
+          cancelAnimationFrame(ecgAnimId);
+          ecgAnimId = null;
+        }
+        renderTable();
+      }
+
+      /* Simulation Ticker */
+      function tick() {
+        if (!isStreaming) return;
+
+        PATIENTS.forEach(p => {
+          const hrDelta = (Math.random() - 0.49) * 2.5;
+          p.vitals.hr = Math.round(Math.max(45, Math.min(175, p.vitals.hr + hrDelta)));
+
+          if (Math.random() > 0.65) {
+            const bpDelta = (Math.random() - 0.5) * 2.5;
+            p.vitals.bpSys = Math.round(Math.max(75, Math.min(210, p.vitals.bpSys + bpDelta)));
+          }
+
+          if (Math.random() > 0.7) {
+            const spo2Delta = (Math.random() - 0.51) * 1.0;
+            p.vitals.spo2 = Math.round(Math.max(80, Math.min(100, p.vitals.spo2 + spo2Delta)));
+          }
+        });
+
+        // Compute Averages
+        const avgHR = Math.round(PATIENTS.reduce((sum, p) => sum + p.vitals.hr, 0) / PATIENTS.length);
+        const avgSys = Math.round(PATIENTS.reduce((sum, p) => sum + p.vitals.bpSys, 0) / PATIENTS.length);
+        const avgDia = Math.round(PATIENTS.reduce((sum, p) => sum + p.vitals.bpDia, 0) / PATIENTS.length);
+        const avgSpO2 = Math.round(PATIENTS.reduce((sum, p) => sum + p.vitals.spo2, 0) / PATIENTS.length);
+        const avgTemp = (PATIENTS.reduce((sum, p) => sum + p.vitals.temp, 0) / PATIENTS.length).toFixed(1);
+
+        document.getElementById('avgHeartRate').textContent = avgHR;
+        document.getElementById('avgBloodPressure').textContent = `${avgSys}/${avgDia}`;
+        document.getElementById('avgSpO2').textContent = `${avgSpO2}%`;
+        document.getElementById('avgTemp').textContent = `${avgTemp}°`;
+
+        renderTable();
+
+        if (selectedPatientId) {
+          const p = PATIENTS.find(item => item.id === selectedPatientId);
+          if (p) {
+            document.getElementById('modalValHR').textContent = p.vitals.hr;
+            document.getElementById('modalValBP').textContent = `${p.vitals.bpSys}/${p.vitals.bpDia}`;
+            document.getElementById('modalValSpO2').textContent = `${p.vitals.spo2}%`;
+            document.getElementById('modalValTemp').textContent = `${p.vitals.temp.toFixed(1)}°C`;
+          }
+        }
+      }
+
+      /* UTC Clock */
+      function updateClock() {
+        const d = new Date();
+        document.getElementById('shiftTimer').textContent = d.toISOString().substring(11, 19) + ' UTC';
+      }
+
+      /* Setup Listeners */
+      function initListeners() {
+        // Acuity Filter Tabs
+        document.querySelectorAll('.nav-filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.nav-filter-btn').forEach(b => {
+              b.classList.remove('active');
+              b.setAttribute('aria-pressed', 'false');
+              b.removeAttribute('aria-current');
+            });
+            btn.classList.add('active');
+            btn.setAttribute('aria-pressed', 'true');
+            btn.setAttribute('aria-current', 'page');
+            activeFilter = btn.getAttribute('data-acuity');
+            renderTable();
+          });
+        });
+
+        // Search Input
+        document.getElementById('queueSearchInput').addEventListener('input', (e) => {
+          searchQuery = e.target.value;
+          renderTable();
+        });
+
+        // Sort Select
+        document.getElementById('sortQueueSelect').addEventListener('change', (e) => {
+          sortCriteria = e.target.value;
+          renderTable();
+        });
+
+        // Table Header Click Sort
+        document.querySelectorAll('th.sortable-th').forEach(th => {
+          th.addEventListener('click', () => {
+            const key = th.getAttribute('data-sort');
+            if (key === 'name') sortCriteria = sortCriteria === 'name-asc' ? 'acuity-desc' : 'name-asc';
+            else if (key === 'hr') sortCriteria = 'hr-desc';
+            else if (key === 'spo2') sortCriteria = 'spo2-asc';
+            document.getElementById('sortQueueSelect').value = sortCriteria;
+            renderTable();
+          });
+        });
+
+        // Telemetry Stream Toggle
+        const btnPause = document.getElementById('btnPauseTelemetry');
+        btnPause.addEventListener('click', () => {
+          isStreaming = !isStreaming;
+          btnPause.setAttribute('aria-pressed', isStreaming ? 'false' : 'true');
+          document.getElementById('pauseFeedText').textContent = isStreaming ? 'Pause Ticker' : 'Resume Ticker';
+        });
+
+        // Chime Toggle
+        const btnChime = document.getElementById('btnToggleChime');
+        btnChime.addEventListener('click', () => {
+          isChimeActive = !isChimeActive;
+          btnChime.setAttribute('aria-pressed', isChimeActive ? 'true' : 'false');
+          btnChime.classList.toggle('active', isChimeActive);
+          document.getElementById('chimeBtnText').textContent = isChimeActive ? 'Chime: On' : 'Chime: Off';
+          if (isChimeActive) beep(880, 0.15);
+        });
+
+        // Modal Close
+        document.getElementById('btnModalClose').addEventListener('click', closeModal);
+
+        // Global Keyboard Controls
+        window.addEventListener('keydown', (e) => {
+          const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+          const isInput = tag === 'input' || tag === 'textarea' || tag === 'select';
+
+          if (e.key === 'Escape') {
+            closeModal();
+            return;
+          }
+
+          if (isInput) return;
+
+          if (e.key === ' ') {
+            e.preventDefault();
+            btnPause.click();
+          } else if (e.key === 'm' || e.key === 'M') {
+            btnChime.click();
+          } else if (e.key === '/') {
+            e.preventDefault();
+            document.getElementById('queueSearchInput').focus();
+          } else if (e.key === '1') {
+            document.getElementById('filterTabImmediate').click();
+          } else if (e.key === '2') {
+            document.getElementById('filterTabUrgent').click();
+          } else if (e.key === '3') {
+            document.getElementById('filterTabStandard').click();
+          } else if (e.key === '0') {
+            document.getElementById('filterTabAll').click();
+          }
+        });
+
+        document.getElementById('btnSaveDirective').addEventListener('click', () => {
+          alert('Clinical directive recorded and synced with telemetry station.');
+        });
+        document.getElementById('btnDispatchTeleRN').addEventListener('click', () => {
+          beep(750, 0.2);
+          alert('Tele-RN consultation dispatched.');
+        });
+      }
+
+      /* Bootstrap */
+      renderTable();
+      renderAlerts();
+      initListeners();
+      updateClock();
+      setInterval(tick, 1000);
+      setInterval(updateClock, 1000);
+    })();
+  </script>
+</body>
+</html>
