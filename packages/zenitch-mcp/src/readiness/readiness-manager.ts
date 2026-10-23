@@ -286,7 +286,7 @@ export class ReadinessManager {
           const cp = path.join(projectRoot, cf);
           if (fs.existsSync(cp)) {
             const st = fs.statSync(cp);
-            if (st.mtimeMs > assessTime) return false;
+            if (Math.floor(st.mtimeMs) > assessTime) return false;
           }
         }
         // Scan project root entries to detect modified source files
@@ -295,7 +295,7 @@ export class ReadinessManager {
           if (ent.isFile() && !ent.name.startsWith('.') && !ent.name.includes('.tmp')) {
             const fp = path.join(projectRoot, ent.name);
             const st = fs.statSync(fp);
-            if (st.mtimeMs > assessTime) return false;
+            if (Math.floor(st.mtimeMs) > assessTime) return false;
           }
         }
       } catch {}
@@ -305,21 +305,21 @@ export class ReadinessManager {
     const reqPath = path.join(zenitchDir, 'requirements.json');
     if (fs.existsSync(reqPath)) {
       const stat = fs.statSync(reqPath);
-      if (stat.mtimeMs > assessTime) return false;
+      if (Math.floor(stat.mtimeMs) > assessTime) return false;
     }
 
     // 3. Check verification.json mtime
     const verPath = path.join(zenitchDir, 'verification.json');
     if (fs.existsSync(verPath)) {
       const stat = fs.statSync(verPath);
-      if (stat.mtimeMs > assessTime) return false;
+      if (Math.floor(stat.mtimeMs) > assessTime) return false;
     }
 
     // 4. Check package.json mtime
     const pkgPath = path.join(projectRoot, 'package.json');
     if (fs.existsSync(pkgPath)) {
       const stat = fs.statSync(pkgPath);
-      if (stat.mtimeMs > assessTime) return false;
+      if (Math.floor(stat.mtimeMs) > assessTime) return false;
     }
 
     return true;

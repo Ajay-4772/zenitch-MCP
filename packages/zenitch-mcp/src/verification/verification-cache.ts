@@ -128,7 +128,7 @@ export class VerificationCache {
               const fullPath = path.isAbsolute(relFile) ? relFile : path.join(projectRoot, relFile);
               if (fs.existsSync(fullPath)) {
                 const stat = fs.statSync(fullPath);
-                if (stat.mtimeMs > verifTime) {
+                if (Math.floor(stat.mtimeMs) > verifTime) {
                   return false;
                 }
               }
@@ -172,7 +172,7 @@ export class VerificationCache {
         const fullPath = path.isAbsolute(f) ? f : path.join(projectRoot, f);
         if (fs.existsSync(fullPath)) {
           const stat = fs.statSync(fullPath);
-          if (stat.mtimeMs > verifTime) {
+          if (Math.floor(stat.mtimeMs) > verifTime) {
             return false;
           }
         }

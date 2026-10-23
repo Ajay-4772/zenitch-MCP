@@ -184,7 +184,7 @@ export class ArchitectureManager {
           const abs = path.join(projectRoot, file);
           if (fs.existsSync(abs)) {
             const st = fs.statSync(abs);
-            if (st.mtimeMs > assessTime) return false;
+            if (Math.floor(st.mtimeMs) > assessTime) return false;
           }
         }
       } catch {
@@ -199,7 +199,7 @@ export class ArchitectureManager {
       if (fs.existsSync(p)) {
         try {
           const st = fs.statSync(p);
-          if (st.mtimeMs > assessTime) return false;
+          if (Math.floor(st.mtimeMs) > assessTime) return false;
         } catch {
           // Continue check
         }
