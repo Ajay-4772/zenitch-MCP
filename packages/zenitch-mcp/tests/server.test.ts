@@ -1,3 +1,4 @@
+import path from 'node:path';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ZenitchServer } from '../src/server.js';
@@ -313,7 +314,7 @@ test('ZenitchServer [PXI]: safely handles non-existent paths, traversal attempts
       name: 'zenitch_plan_product_experience',
       arguments: {
         rawPrompt: 'Create a metrics dashboard',
-        projectRoot: process.cwd() + '\\package.json'
+        projectRoot: path.join(process.cwd(), 'package.json')
       }
     }
   });

@@ -80,7 +80,7 @@ test('Project Intelligence: Real-world inspection of Zenitch root workspace (Rea
 
   const result = inspectProject({
     projectRoot: targetDir,
-    scanDepth: 4
+    scanDepth: 5
   });
 
   // Verify read-only guarantee: modification time must not change

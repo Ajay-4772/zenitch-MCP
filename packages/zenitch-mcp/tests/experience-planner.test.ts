@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { performance } from 'node:perf_hooks';
@@ -207,7 +208,7 @@ describe('PXI Experience Planner — Phase 1 Test Suite & Verification Gate', ()
     it('safely handles file path passed as projectRoot without throwing', () => {
       const plan = planProductExperience({
         rawPrompt: 'Add telemetry widget',
-        projectRoot: process.cwd() + '\\package.json'
+        projectRoot: path.join(process.cwd(), 'package.json')
       });
 
       assert.ok(plan.targetFormat);
