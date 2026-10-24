@@ -3,67 +3,90 @@
 [![CI](https://github.com/Ajay-4772/zenitch-MCP/actions/workflows/ci.yml/badge.svg)](https://github.com/Ajay-4772/zenitch-MCP/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
+[![MCP Protocol](https://img.shields.io/badge/MCP-1.32.1-orange.svg)](https://modelcontextprotocol.io)
 
-
-> **AI-Powered UI/UX Design Intelligence and Verified Engineering Model Context Protocol Server**  
-> Product-driven ergonomics, project-aware preservation, anti-cliché design policies, design system token intelligence, component reuse discovery, static quality auditing, visual regression diffing, GPU-safe animation analysis, and stateful verified engineering across AI coding workflows.
-
----
-
-## 1. Overview
-
-**Zenitch MCP** is a Model Context Protocol (MCP) server designed to guide AI coding assistants toward accessible, responsive, and project-consistent frontend code. It equips AI coding assistants with structured design system intelligence, architecture dependency graphs, change impact analysis, and persistent project memory.
-
-### Key Capabilities:
-* **Product Experience Intelligence (PXI):** Proactively plans adaptive application architecture, layout hierarchies, candidate views, and ergonomic requirements before code generation.
-* **Design Policy & Anti-Cliché Governance:** Audits markup and CSS for static WCAG 2.2 contrast math, touch target sizing, and flags visual anti-patterns such as unjustified dark themes or excessive glassmorphism in utilitarian domains.
-* **Hardware Animation Budgets:** Analyzes CSS transitions and keyframes for compositor-friendly properties (transform, opacity), flagging layout-reflowing properties and verifying `prefers-reduced-motion` media queries.
-* **Persistent Project Memory (`.zenitch/`):** Provides an advisory-locked, corruption-resistant ledger for requirements, human approvals, architectural decisions, and progressive verification.
+> The standalone Model Context Protocol server package providing UI/UX design intelligence, project inspection, and static quality checks.
 
 ---
 
-## 2. Quick Start
+## Table of Contents
 
-Run Zenitch MCP directly using `npx` (zero installation required):
+- [Overview](#overview)
+- [Requirements and Prerequisites](#requirements-and-prerequisites)
+- [Installation and Build](#installation-and-build)
+- [MCP Client Configuration](#mcp-client-configuration)
+- [Canonical Baseline Tools (11 Tools)](#canonical-baseline-tools-11-tools)
+- [Progressive Engineering Tiers (Up to 24 Tools)](#progressive-engineering-tiers-up-to-24-tools)
+- [Example AI Prompts](#example-ai-prompts)
+- [Verification Boundaries and Limitations](#verification-boundaries-and-limitations)
+- [Security Model](#security-model)
+- [Troubleshooting](#troubleshooting)
+- [Programmatic Library Usage](#programmatic-library-usage)
+- [Contributing and Security](#contributing-and-security)
+
+---
+
+## Overview
+
+`zenitch-mcp` is the core executable package of the Zenitch project. It implements a stdio-based MCP server that connects to AI coding tools like Claude Desktop, Cursor, and Antigravity IDE.
+
+Its goal is to turn generic AI code generation into project-aware, intentional engineering. It provides tools for:
+- Planning layout topology and interface requirements based on user goals.
+- Inspecting existing codebase frameworks, styling conventions, and components.
+- Generating coherent, contrast-checked design tokens.
+- Recommending existing component reuse over duplicate scaffolding.
+- Auditing HTML and CSS for basic responsive hygiene, static WCAG rules, and GPU-friendly animations.
+
+---
+
+## Requirements and Prerequisites
+
+- **Node.js:** `>= 20.0.0` (verified on Node.js 20.x LTS and 22.x LTS).
+- **Package Manager:** `npm >= 9.0.0`.
+- **Operating System:** Windows, macOS, or Linux.
+- **Client:** Any MCP-compliant client that supports stdio transport (Claude Desktop, Cursor, Antigravity IDE, etc.).
+
+---
+
+## Installation and Build
+
+### Running from Cloned Source
+
+```bash
+# 1. From repository root, install dependencies
+npm ci
+
+# 2. Build TypeScript across workspaces
+npm run build
+
+# 3. Test execution directly
+node packages/zenitch-mcp/dist/src/cli.js
+```
+
+### Running via npx (Once Published to npm)
+
+Once `zenitch-mcp` is published on the npm registry, no cloning is required:
 
 ```bash
 npx -y zenitch-mcp
 ```
 
-Alternatively, install it globally:
-
-```bash
-npm install -g zenitch-mcp
-zenitch-mcp
-```
-
 ---
 
-## 3. Client Configuration
+## MCP Client Configuration
 
-### Google Antigravity (`mcp_config.json`)
-```json
-{
-  "mcpServers": {
-    "zenitch": {
-      "command": "npx",
-      "args": ["-y", "zenitch-mcp"],
-      "env": {
-        "ZENITCH_ENABLED": "true"
-      }
-    }
-  }
-}
-```
+Configure Zenitch in your client's MCP configuration file. Use absolute paths when running from a local checkout.
 
 ### Claude Desktop (`claude_desktop_config.json`)
+
 ```json
 {
   "mcpServers": {
     "zenitch": {
-      "command": "npx",
-      "args": ["-y", "zenitch-mcp"],
+      "command": "node",
+      "args": ["<ABSOLUTE_PATH>/packages/zenitch-mcp/dist/src/cli.js"],
       "env": {
+        "ZENITCH_LOG_LEVEL": "INFO",
         "ZENITCH_ENABLED": "true"
       }
     }
@@ -72,13 +95,32 @@ zenitch-mcp
 ```
 
 ### Cursor (`.cursor/mcp.json`)
+
 ```json
 {
   "mcpServers": {
     "zenitch": {
-      "command": "npx",
-      "args": ["-y", "zenitch-mcp"],
+      "command": "node",
+      "args": ["<ABSOLUTE_PATH>/packages/zenitch-mcp/dist/src/cli.js"],
       "env": {
+        "ZENITCH_LOG_LEVEL": "INFO",
+        "ZENITCH_ENABLED": "true"
+      }
+    }
+  }
+}
+```
+
+### Antigravity IDE (`mcp_config.json`)
+
+```json
+{
+  "mcpServers": {
+    "zenitch": {
+      "command": "node",
+      "args": ["<ABSOLUTE_PATH>/packages/zenitch-mcp/dist/src/cli.js"],
+      "env": {
+        "ZENITCH_LOG_LEVEL": "INFO",
         "ZENITCH_ENABLED": "true"
       }
     }
@@ -88,57 +130,100 @@ zenitch-mcp
 
 ---
 
-## 4. MCP Tool Inventory & Compatibility
+## Canonical Baseline Tools (11 Tools)
 
-Zenitch MCP organizes its capabilities into progressive tiers, unified under canonical `zenitch_*` identifiers across both design intelligence and stateful engineering memory.
+By default, Zenitch registers 11 core tools to keep tool listings clean and protect the LLM's context window:
 
-| Subsystem | MCP Tool Identifier | Category | Purpose |
-| :--- | :--- | :--- | :--- |
-| **Core** | `zenitch_ping` | Diagnostic | Health check, uptime telemetry, and server readiness. |
-| **Core** | `zenitch_get_system_info` | Diagnostic | Subsystem operational status and registered policies. |
-| **PXI** | `zenitch_plan_product_experience` | Intelligence | Plans layout architecture, candidate views, and component hierarchy before coding. |
-| **Product** | `zenitch_analyze_product_context` | Intelligence | Analyzes domain, target audience, and ergonomic density requirements. |
-| **Project** | `zenitch_inspect_project` | Intelligence | Discovers project framework, existing components, and tokens (read-only). |
-| **Policy** | `zenitch_evaluate_design_policy` | Governance | Evaluates UI/markup against anti-cliche, anti-bloat, and WCAG rules. |
-| **Design System** | `zenitch_generate_design_system` | Design System | Generates accessible color palettes, typography, and spacing scales. |
-| **Component** | `zenitch_resolve_component` | Component | Recommends reusing existing codebase components before creating new ones. |
-| **Audit** | `zenitch_audit_page_quality` | Quality Assurance | Audits pages for overflow, contrast, touch targets, and form accessibility. |
-| **Visual** | `zenitch_compare_visual_regression` | Quality Assurance | Compares before/after screenshot diffs to detect unexpected layout shifts. |
-| **Animation** | `zenitch_evaluate_animation_budget` | Performance | Analyzes CSS transitions for compositor-friendly properties and checks reduced-motion declarations. |
-| **Memory** | `zenitch_get_project_context` | Engineering Memory | Retrieves persistent project requirements, constraints, and preferences. |
-| **Memory** | `zenitch_record_decision` | Engineering Memory | Records accepted/rejected decisions and generates negative constraints. |
-| **Memory** | `zenitch_manage_requirement` | Engineering Memory | Tracks requirement lifecycles, acceptance criteria, and human approvals. |
-| **Changes (Phase 2)** | `zenitch_manage_change` | Change Control | Records and links code modifications to requirements and decisions. |
-| **Changes (Phase 2)** | `zenitch_inspect_changes` | Change Control | Inspects Git status and detects affected requirements. |
-| **Verification (Phase 3)** | `zenitch_verify` | Verification | Executes progressive static and runtime verification passes. |
-| **Verification (Phase 3)** | `zenitch_inspect_verification` | Verification | Inspects verification history and criterion evidence. |
-| **Readiness (Phase 4)** | `zenitch_check_release_readiness` | Release Control | Comprehensive 10-category audit before production release. |
-| **Readiness (Phase 4)** | `zenitch_inspect_release_readiness` | Release Control | Inspects stored readiness reports and blocking issues. |
-| **Impact (Phase 5)** | `zenitch_analyze_change_impact` | Impact Analysis | Traverses dependency graph to assess blast radius of code changes. |
-| **Impact (Phase 5)** | `zenitch_inspect_impact` | Impact Analysis | Queries historical impact assessments and risk levels. |
-| **Architecture (Phase 6)** | `zenitch_analyze_architecture` | Architecture | Constructs module dependency graph and detects circular dependencies. |
-| **Architecture (Phase 6)** | `zenitch_inspect_architecture` | Architecture | Inspects layer violations, LOC boundaries, and complexity metrics. |
+| MCP Tool Identifier | Category | When It Is Useful |
+| :--- | :--- | :--- |
+| `zenitch_ping` | Diagnostics | Verifies that the MCP server process is running, responsive, and reports uptime. |
+| `zenitch_get_system_info` | Diagnostics | Reports active subsystem states, registered policies, and server version. |
+| `zenitch_analyze_product_context` | Intelligence | Classifies product domain, user goals, and interface density requirements before coding. |
+| `zenitch_inspect_project` | Intelligence | Reads existing project dependencies, styling setup, and components without altering code. |
+| `zenitch_plan_product_experience` | Intelligence | Generates layout topology, view states, and component hierarchy from natural language. |
+| `zenitch_evaluate_design_policy` | Governance | Audits proposed markup against WCAG contrast math, touch targets, and visual anti-patterns. |
+| `zenitch_generate_design_system` | Design System | Produces accessible color palettes, typography scales, and spacing tokens. |
+| `zenitch_resolve_component` | Component | Suggests reusing existing codebase components or scaffolds accessible new components. |
+| `zenitch_audit_page_quality` | Quality | Checks HTML for landmarks, viewport configuration, and responsive layout risks. |
+| `zenitch_compare_visual_regression` | Quality | Compares before-and-after visual artifacts and flags structural layout drift. |
+| `zenitch_evaluate_animation_budget` | Performance | Inspects CSS transitions for compositor-friendly properties and checks reduced-motion queries. |
 
 ---
 
-## 5. Security & Safety Boundaries
+## Progressive Engineering Tiers (Up to 24 Tools)
 
-1. **Read-Only Codebase Inspection:** Codebase scanning is strictly read-only with automatic redaction of API keys, AWS credentials, and environment tokens.
-2. **Confined Memory Storage:** State mutations are strictly quarantined to the `.zenitch/` directory within the target project root, protected by advisory file locking and path traversal validation.
-3. **SSRF & Network Mitigations:** Network tools block RFC 1918 private subnets, loopback interfaces (`127.0.0.1`, `::1`), and cloud metadata endpoints, enforcing a strict 2 MB response buffer limit.
-4. **Clean-Room Boundary:** Zenitch does not bundle decompilers or binary reverse-engineering tools. It ingests verified behavioral requirements and design specifications while safeguarding proprietary IP.
+If you need deeper change control or persistent project memory, enable progressive tiers using environment variables:
+
+| Environment Variable | Default | Tool Count | What It Adds |
+| :--- | :---: | :---: | :--- |
+| *(None / Default)* | `false` | **11 tools** | Baseline design intelligence, inspection, and static quality checks. |
+| `ZENITCH_ENABLED=true` | `false` | **14 tools** | **Phase 1 Project Memory:** Adds `zenitch_get_project_context`, `zenitch_record_decision`, and `zenitch_manage_requirement` using the `.zenitch/` ledger. |
+| `ZENITCH_PHASE2=true` | `false` | **16 tools** | **Phase 2 Change Control:** Adds `zenitch_manage_change` and `zenitch_inspect_changes` to link Git modifications to requirements. |
+| `ZENITCH_PHASE3=true` | `false` | **18 tools** | **Phase 3 Verification:** Adds `zenitch_verify` and `zenitch_inspect_verification` for progressive static and runtime check passes. |
+| `ZENITCH_PHASE4=true` | `false` | **20 tools** | **Phase 4 Release Readiness:** Adds `zenitch_check_release_readiness` and `zenitch_inspect_release_readiness` across 10 release categories. |
+| `ZENITCH_PHASE5=true` | `false` | **22 tools** | **Phase 5 Impact Analysis:** Adds `zenitch_analyze_change_impact` and `zenitch_inspect_impact` to map blast radius and affected files. |
+| `ZENITCH_PHASE6=true` | `false` | **24 tools** | **Phase 6 Architecture:** Adds `zenitch_analyze_architecture` and `zenitch_inspect_architecture` for module dependency cycle detection. |
 
 ---
 
-### Verification Boundaries & Limitations
+## Example AI Prompts
 
-* **Static vs. Dynamic:** Zenitch performs static source analysis, CSS AST parsing, and markup inspection. It does **not** execute browser JavaScript, calculate dynamic subpixel rendering reflows, or profile real hardware GPU frame times.
-* **Accessibility Limitations:** Tools evaluate structural presence (semantic HTML5 landmark roles, color contrast math, touch target dimensions, aria-label attributes). Static checks do **not** certify full WCAG compliance or physical keyboard focus trap behavior.
-* **Advisory Role:** Zenitch provides evidence-based analysis and advisory guardrails. Engineers remain responsible for testing and validating AI-generated code.
+Here are realistic ways to prompt an MCP-connected coding assistant to make use of Zenitch:
 
-## 6. Programmatic Library Usage
+### Project Inspection & Reuse
+> *"Before you build the user settings form, inspect our repository conventions. Tell me what form libraries, CSS tools, and button components we already have so we don't recreate them."*
 
-Zenitch MCP can also be imported as a non-blocking ES module library:
+### Experience & Layout Planning
+> *"We need a clinical sample intake dashboard. Use Zenitch to analyze the domain requirements and plan out the layout hierarchy, density, and key views before writing any markup."*
+
+### Quality & Accessibility Check
+> *"Review the markup for this pricing table component. Check for contrast issues, touch target sizes, and missing accessibility attributes, and separate confirmed static findings from things that require manual browser testing."*
+
+### Change Impact Analysis (Tier 5)
+> *"We want to update the shared NavigationBar component. Analyze the change impact to see which routes and child components might be affected."*
+
+---
+
+## Verification Boundaries and Limitations
+
+To maintain developer trust, Zenitch makes clear distinctions between static checks and runtime behavior:
+
+- **Static vs. Browser Runtime:** Zenitch analyzes source code, HTML structure, and CSS rules. It does **not** execute browser JavaScript, compute dynamic layout reflows, or emulate hardware GPU frame timings.
+- **Accessibility Heuristics:** Contrast calculations and landmark inspections evaluate structural presence. They do **not** certify full WCAG compliance or test screen-reader experience and physical keyboard focus traps.
+- **Advisory Guardrails:** Zenitch provides evidence and recommendations. Developers remain in charge of reviewing and testing code generated by AI models.
+
+---
+
+## Security Model
+
+- **Read-Only Codebase Inspection:** Codebase scanning tools (`zenitch_inspect_project`, `zenitch_analyze_architecture`) operate in strictly read-only mode and do not modify project source files.
+- **Stateful Memory Quarantined to `.zenitch/`:** While inspection tools are read-only, stateful memory features (Tiers 1–5) record project decisions, requirements, and verification evidence. All written state is strictly quarantined to the `.zenitch/` directory within the target project root, protected by advisory file locks and path traversal validation.
+- **Secret Redaction:** Built-in filters mask common environment variables and credential patterns (`.env`, `AKIA...`, private keys) to prevent accidental leaks in logs or tool responses.
+- **SSRF Hardening:** Network utilities reject RFC 1918 private subnets, loopback interfaces (`127.0.0.1`, `::1`), and cloud metadata endpoints, enforcing an authoritative 2 MB streaming response buffer cap.
+- **Protocol Isolation:** Process `stdout` is strictly reserved for valid JSON-RPC 2.0 messages. All operational telemetry, debug logs, and error traces route exclusively to `stderr`.
+- **Defense-in-Depth Limitations:** While inspection tools are read-only and memory storage is quarantined to `.zenitch/`, application-level checks do not replace host operating system permissions or network firewall controls. Developers should always review code generated or modified by AI assistants.
+
+---
+
+## Troubleshooting
+
+### MCP Client Cannot Connect
+- **Check executable path:** Verify that the path in your client configuration points to the compiled CLI file: `dist/src/cli.js`.
+- **Build output exists:** If you cloned the repo, ensure you ran `npm run build` first.
+- **Node version:** Run `node -v` to confirm you are using Node.js `>= 20.0.0`.
+
+### stdout Contains Non-JSON Output
+- Zenitch redirects all internal logs to `stderr`. If you modify code, never use `console.log` in tool execution paths, as extra output on `stdout` corrupts the JSON-RPC stdio transport.
+
+### Progressive Tools Not Appearing
+- Ensure environment variable names are spelled correctly (e.g., `ZENITCH_ENABLED=true` for memory tools, `ZENITCH_PHASE6=true` for architecture tools).
+- Restart your MCP client after updating configuration files.
+
+---
+
+## Programmatic Library Usage
+
+Zenitch MCP can also be imported directly in TypeScript projects as an ES module:
 
 ```typescript
 import {
@@ -159,7 +244,10 @@ console.log('Archetype:', plan.layoutArchitecture.archetype);
 
 ---
 
-## 7. License
+## Contributing and Security
 
-Licensed under the [MIT License](LICENSE).  
-Copyright (c) 2026 Ajay M.
+- **Contributing:** When working in the source repository, please see [CONTRIBUTING.md](../../CONTRIBUTING.md) (or on [GitHub](https://github.com/Ajay-4772/zenitch-MCP/blob/main/CONTRIBUTING.md)) for development setup, testing requirements, and PR guidelines.
+- **Security:** Vulnerability reporting policies are documented in [SECURITY.md](../../SECURITY.md) (or on [GitHub](https://github.com/Ajay-4772/zenitch-MCP/blob/main/SECURITY.md)).
+- **License:** Distributed under the MIT License (see [LICENSE](LICENSE)).
+- **Notices:** Third-party dependency notices are in [NOTICE](NOTICE).
+- **Author:** Ajay M
